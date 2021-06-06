@@ -4,7 +4,7 @@ _What Github issue does this resolve (please include link)?_
 
 - Resolves #
 
-### Proposed Changes
+### Changes Proposed
 
 _Describe what this Pull Request does_
 
