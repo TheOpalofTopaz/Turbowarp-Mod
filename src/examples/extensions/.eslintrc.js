@@ -7,3 +7,4 @@ module.exports = {
         Scratch: true
     }
 };
+//FUCK ESLINT
