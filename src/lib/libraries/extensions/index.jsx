@@ -101,6 +101,27 @@ export default [
     {
         name: (
             <FormattedMessage
+                defaultMessage="Runtime"
+                description="Name of Runtime extension"
+                id="sn.runtime.name"
+            />
+        ),
+        extensionId: 'runtime',
+        iconURL: hcIconURL,
+        insetIconURL: hcInsetIconURL,
+        description: (
+            <FormattedMessage
+                defaultMessage="Runtime make you life litte easy"
+                description="Allow you interface Sn-edit Vm"
+                id="sn.runtime.description"
+            />
+        ),
+        featured: true,
+        incompatibleWithScratch: true
+    },
+    {
+        name: (
+            <FormattedMessage
                 defaultMessage="Music"
                 description="Name for the 'Music' extension"
                 id="gui.extension.music.name"
