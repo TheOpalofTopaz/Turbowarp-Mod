@@ -116,6 +116,7 @@ export default [
                 id="sn.runt.description"
             />
         ),
+        //i hate code some time
         featured: true,
         incompatibleWithScratch: true
     },
