@@ -103,17 +103,17 @@ export default [
             <FormattedMessage
                 defaultMessage="Runtime"
                 description="Name of Runtime extension"
-                id="sn.runtime.name"
+                id="sn.runt.name"
             />
         ),
-        extensionId: 'runtime',
-        iconURL: hcIconURL,
-        insetIconURL: hcInsetIconURL,
+        extensionId: 'runt',
+        iconURL: customExtensionIcon,
+        insetIconURL: customExtensionIcon,
         description: (
             <FormattedMessage
                 defaultMessage="Runtime make you life litte easy"
                 description="Allow you interface Sn-edit Vm"
-                id="sn.runtime.description"
+                id="sn.runt.description"
             />
         ),
         featured: true,
