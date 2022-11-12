@@ -123,8 +123,8 @@ export default [
     {
         name: (
             <FormattedMessage
-                defaultMessage="Runtime"
-                description="Name of Runtime extension"
+                defaultMessage="Hash"
+                description="Name of Hash extension"
                 id="sn.hash.name"
             />
         ),
@@ -133,8 +133,8 @@ export default [
         insetIconURL: customExtensionIcon,
         description: (
             <FormattedMessage
-                defaultMessage="Runtime make you life litte easy"
-                description="Allow you interface Sn-edit Vm"
+                defaultMessage="Cryptography "
+                description="Make hashing and enctioons"
                 id="sn.hash.description"
             />
         ),
