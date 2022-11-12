@@ -53,7 +53,7 @@ import snapIconURL from './snap/snap.svg'
 import snapInsetIconURL from './snap/snap-small.svg'
 
 import customExtensionIcon from './custom/custom.svg';
-
+//hi
 export default [
     {
         name: (
