@@ -125,17 +125,17 @@ export default [
             <FormattedMessage
                 defaultMessage="Hash"
                 description="Name of Hash extension"
-                id="sn.thash.name"
+                id="sn.hash.name"
             />
         ),
-        extensionId: 'thash',
+        extensionId: 'hash',
         iconURL: customExtensionIcon,
         insetIconURL: customExtensionIcon,
         description: (
             <FormattedMessage
                 defaultMessage="Cryptography "
                 description="Make hashing and enctioons"
-                id="sn.thash.description"
+                id="sn.hash.description"
             />
         ),
         featured: true,
