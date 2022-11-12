@@ -138,6 +138,7 @@ export default [
                 id="sn.hash.description"
             />
         ),
+        //this might a while to fix
         featured: true,
         incompatibleWithScratch: true
     },
