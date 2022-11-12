@@ -125,20 +125,20 @@ export default [
             <FormattedMessage
                 defaultMessage="Hash"
                 description="Name of Hash extension"
-                id="sn.hash.name"
+                id="sn.ten.name"
             />
         ),
-        extensionId: 'hash',
+        extensionId: 'ten',
         iconURL: customExtensionIcon,
         insetIconURL: customExtensionIcon,
         description: (
             <FormattedMessage
                 defaultMessage="Cryptography "
                 description="Make hashing and enctioons"
-                id="sn.hash.description"
+                id="sn.ten.description"
             />
         ),
-        //this might a while to fixjj
+        //this might a while to fixjj9
         featured: true,
         incompatibleWithScratch: true
     },
