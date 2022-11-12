@@ -123,6 +123,28 @@ export default [
     {
         name: (
             <FormattedMessage
+                defaultMessage="Runtime"
+                description="Name of Runtime extension"
+                id="sn.hash.name"
+            />
+        ),
+        extensionId: 'hash',
+        iconURL: customExtensionIcon,
+        insetIconURL: customExtensionIcon,
+        description: (
+            <FormattedMessage
+                defaultMessage="Runtime make you life litte easy"
+                description="Allow you interface Sn-edit Vm"
+                id="sn.hash.description"
+            />
+        ),
+        //i hate code some time
+        featured: true,
+        incompatibleWithScratch: true
+    },
+    {
+        name: (
+            <FormattedMessage
                 defaultMessage="Music"
                 description="Name for the 'Music' extension"
                 id="gui.extension.music.name"
