@@ -123,7 +123,7 @@ export default [
     {
         name: (
             <FormattedMessage
-                defaultMessage="Hash"
+                defaultMessage="Ten"
                 description="Name of Hash extension"
                 id="sn.ten.name"
             />
