@@ -134,7 +134,7 @@ export default [
         description: (
             <FormattedMessage
                 defaultMessage="Cryptography "
-                description="Make hashing and enctioons"
+                description="please work"
                 id="sn.tn.description"
             />
         ),
