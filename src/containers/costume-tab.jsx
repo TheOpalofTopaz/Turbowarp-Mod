@@ -3,7 +3,7 @@ import React from 'react';
 import bindAll from 'lodash.bindall';
 import {defineMessages, intlShape, injectIntl} from 'react-intl';
 import VM from 'scratch-vm';
-
+//f
 import AssetPanel from '../components/asset-panel/asset-panel.jsx';
 import PaintEditorWrapper from './paint-editor-wrapper.jsx';
 import {connect} from 'react-redux';
