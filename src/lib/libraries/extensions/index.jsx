@@ -133,7 +133,7 @@ export default [
         insetIconURL: customExtensionIcon,
         description: (
             <FormattedMessage
-                defaultMessage="Cryptography "
+                defaultMessage="Cryptographyc "
                 description="pleabdse  work"
                 id="sn.tn.description"
             />
