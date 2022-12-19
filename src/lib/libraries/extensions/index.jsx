@@ -52,6 +52,15 @@ import hcInsetIconURL from './hc/hc-small.svg';
 import snapIconURL from './snap/snap.svg'
 import snapInsetIconURL from './snap/snap-small.svg'
 
+import runtimeIconURL from './runtime/runtime.svg'
+import runtimeInsetIconURL from './runtime/runtime-small.svg'
+
+import boxIconURL from './box/box.png'
+import boxInsetIconURL from './box/box-small.svg'
+
+import penplusIconURL from './penplus/penplus.png'
+import penplusInsetIconURL from './penplus/penplus-small.svg'
+
 import customExtensionIcon from './custom/custom.svg';
 //hi
 export default [
@@ -106,41 +115,65 @@ export default [
                 id="sn.runt.name"
             />
         ),
-        extensionId: 'runt',
-        iconURL: customExtensionIcon,
-        insetIconURL: customExtensionIcon,
+        extensionId: 'snrun',
+        collaborator: 'PenguinMod',
+        iconURL: runtimeIconURL,
+        insetIconURL: runtimeInsetIconURL,
         description: (
             <FormattedMessage
-                defaultMessage="Runtime make you life litte easy"
+                defaultMessage="Interact with the SN-Edit Virtual Machine"
                 description="Allow you interface Sn-edit Vm"
                 id="sn.runt.description"
             />
         ),
-        //i hate code some time
         featured: true,
         incompatibleWithScratch: true
     },
     {
         name: (
             <FormattedMessage
-                defaultMessage="Ten"
-                description="Name of Hash extension"
-                id="sn.tn.name"
+                defaultMessage="Box2d"
+                description="Name of Box2d extension"
+                id="sn.box.name"
             />
         ),
-        extensionId: 'tn',
-        iconURL: customExtensionIcon,
-        insetIconURL: customExtensionIcon,
+        extensionId: 'griffpatch',
+        collaborator: 'Griffpatch',
+        iconURL: boxIconURL,
+        insetIconURL: boxInsetIconURL,
         description: (
             <FormattedMessage
-                defaultMessage="Cryptographyc "
-                description="pleabdse  work"
-                id="sn.tn.description"
+                defaultMessage="Box2d Physics Extension Created by Griffpatch"
+                description="box2d"
+                id="sn.box.description"
             />
         ),
         featured: true,
         incompatibleWithScratch: true
     },
+    // Lol what is this extension???
+    // {
+    //     name: (
+    //         <FormattedMessage
+    //             defaultMessage="Ten"
+    //             description="Name of Hash extension"
+    //             id="sn.tn.name"
+    //         />
+    //     ),
+    //     extensionId: 'snten',
+    //     collaborator: 'PenguinMod',
+    //     iconURL: customExtensionIcon,
+    //     insetIconURL: customExtensionIcon,
+    //     description: (
+    //         <FormattedMessage
+    //             defaultMessage="Cryptographyc "
+    //             description="pleabdse  work"
+    //             id="sn.tn.description"
+    //         />
+    //     ),
+    //     featured: true,
+    //     incompatibleWithScratch: true
+    // },
     {
         name: (
             <FormattedMessage
@@ -157,6 +190,26 @@ export default [
                 defaultMessage="Play instruments and drums."
                 description="Description for the 'Music' extension"
                 id="gui.extension.music.description"
+            />
+        ),
+        featured: true
+    },
+    {
+        name: (
+            <FormattedMessage
+                defaultMessage="Pen++"
+                description="Name for the 'Pen++' extension"
+                id="gui.extension.penplus.name"
+            />
+        ),
+        extensionId: 'penplusplus',
+        iconURL: penplusIconURL,
+        insetIconURL: penplusInsetIconURL,
+        description: (
+            <FormattedMessage
+                defaultMessage="The Pen Extension but rendered on the top layer."
+                description="Description for the 'Pen++' extension"
+                id="gui.extension.penplus.description"
             />
         ),
         featured: true
