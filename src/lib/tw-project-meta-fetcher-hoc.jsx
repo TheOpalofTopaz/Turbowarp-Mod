@@ -8,8 +8,8 @@ import {setAuthor, setDescription} from '../reducers/tw';
 
 export const fetchProjectMeta = async projectId => {
     const urls = [
-        `https://trampoline.turbowarp.org/proxy/projects/${projectId}`,
-        `https://trampoline.turbowarp.xyz/proxy/projects/${projectId}`
+        `http://codetorch.localhost/backend/projects.php?${projectId}`,
+        `http://codetorch.localhost/backend/projects.php?${projectId}`
     ];
     let firstError;
     for (const url of urls) {
@@ -20,7 +20,7 @@ export const fetchProjectMeta = async projectId => {
                 return data;
             }
             if (res.status === 404) {
-                throw new Error('Project is probably unshared');
+                throw new Error('Project does not exist');
             }
             throw new Error(`Unexpected status code: ${res.status}`);
         } catch (err) {
