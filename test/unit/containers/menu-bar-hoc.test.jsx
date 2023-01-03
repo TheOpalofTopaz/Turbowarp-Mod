@@ -62,7 +62,7 @@ describe('Menu Bar HOC', () => {
             <WrappedComponent
                 canCreateNew
                 projectChanged
-                canSave={false}
+                canSave={true}
                 confirmWithMessage={() => (false)} // eslint-disable-line react/jsx-no-bind
                 store={store}
             />
@@ -79,7 +79,7 @@ describe('Menu Bar HOC', () => {
             <WrappedComponent
                 projectChanged
                 canCreateNew={false}
-                canSave={false}
+                canSave={true}
                 confirmWithMessage={() => (false)} // eslint-disable-line react/jsx-no-bind
                 store={store}
             />
@@ -95,7 +95,7 @@ describe('Menu Bar HOC', () => {
         const wrapper = mount(
             <WrappedComponent
                 canCreateNew={false}
-                canSave={false}
+                canSave={true}
                 confirmWithMessage={() => (false)} // eslint-disable-line react/jsx-no-bind
                 projectChanged={false}
                 store={store}
@@ -142,7 +142,7 @@ describe('Menu Bar HOC', () => {
         const wrapper = mount(
             <WrappedComponent
                 projectChanged
-                canSave={false}
+                canSave={true}
                 store={store}
             />
         );
@@ -156,7 +156,7 @@ describe('Menu Bar HOC', () => {
         const WrappedComponent = MenuBarHOC(Component);
         const wrapper = mount(
             <WrappedComponent
-                canSave={false}
+                canSave={true}
                 projectChanged={false}
                 store={store}
             />

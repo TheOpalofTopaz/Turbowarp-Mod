@@ -38,7 +38,7 @@ describe('projectSaverHOC', () => {
         const mounted = mount(
             <WrappedComponent
                 isShowingWithId
-                canSave={false}
+                canSave={true}
                 isCreatingNew={false}
                 isShowingSaveable={false} // set explicitly because it relies on ownProps.canSave
                 isShowingWithoutId={false}
@@ -88,7 +88,7 @@ describe('projectSaverHOC', () => {
         const mounted = mount(
             <WrappedComponent
                 isShowingWithoutId
-                canSave={false}
+                canSave={true}
                 isCreatingNew={false}
                 isShowingWithId={false}
                 isUpdating={false}

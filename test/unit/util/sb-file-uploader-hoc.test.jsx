@@ -29,7 +29,7 @@ describe('SBFileUploaderHOC', () => {
         const wrapper = shallowMountWithContext(
             <WrappedComponent
                 projectChanged
-                canSave={false}
+                canSave={true}
                 cancelFileUpload={jest.fn()}
                 closeFileMenu={jest.fn()}
                 requestProjectUpload={jest.fn()}
@@ -88,7 +88,7 @@ describe('SBFileUploaderHOC', () => {
         const mounted = mountWithIntl(
             <WrappedComponent
                 projectChanged
-                canSave={false}
+                canSave={true}
                 cancelFileUpload={mockedCancelFileUpload}
                 closeFileMenu={jest.fn()}
                 isLoadingUpload={false}
