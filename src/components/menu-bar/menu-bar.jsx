@@ -591,7 +591,7 @@ class MenuBar extends React.Component {
                                             <React.Fragment>
                                                 {extended.available && (
                                                     <React.Fragment>
-                                                        {extended.name !== null && (
+                                                        {1 == 0 && (
                                                             <MenuItem onClick={this.getSaveToComputerHandler(extended.saveToLastFile)}>
                                                                 <FormattedMessage
                                                                     defaultMessage="Save to {file}"
@@ -603,34 +603,20 @@ class MenuBar extends React.Component {
                                                                 />
                                                             </MenuItem>
                                                         )}
-                                                        <MenuItem onClick={this.getSaveToComputerHandler(extended.saveAsNew)}>
-                                                            <FormattedMessage
-                                                                defaultMessage="Save as..."
-                                                                description="Menu bar item to select a new file to save the project as" // eslint-disable-line max-len
-                                                                id="tw.saveAs"
-                                                            />
-                                                        </MenuItem>
                                                     </React.Fragment>
                                                 )}
                                                 <MenuItem onClick={this.getSaveToComputerHandler(downloadProject)}>
-                                                    {extended.available ? (
-                                                        <FormattedMessage
-                                                            defaultMessage="Save to separate file..."
-                                                            description="Download the project once, without being able to easily save to the same spot"
-                                                            id="tw.oldDownload"
-                                                        />
-                                                    ) : (
                                                         <FormattedMessage
                                                             defaultMessage="Save to your computer"
                                                             description="Menu bar item for downloading a project to your computer" // eslint-disable-line max-len
                                                             id="gui.menuBar.downloadToComputer"
                                                         />
-                                                    )}
+
                                                 </MenuItem>
                                             </React.Fragment>
                                         )}</SB3Downloader>
                                     </MenuSection>
-                                    {this.props.onClickPackager && (
+                                    {1 == 0 && (
                                         <MenuSection>
                                             <MenuItem
                                                 onClick={this.handleClickPackager}
@@ -644,20 +630,6 @@ class MenuBar extends React.Component {
                                             </MenuItem>
                                         </MenuSection>
                                     )}
-                                    <MenuSection>
-                                        <TWRestorePointLoader>{(className, loadRestorePoint) => (
-                                            <MenuItem
-                                                className={className}
-                                                onClick={loadRestorePoint}
-                                            >
-                                                <FormattedMessage
-                                                    defaultMessage="Load restore point"
-                                                    description="Menu bar item for loading a restore point"
-                                                    id="tw.menuBar.loadRestorePoint"
-                                                />
-                                            </MenuItem>
-                                        )}</TWRestorePointLoader>
-                                    </MenuSection>
                                 </MenuBarMenu>
                             </div>
                         )}
@@ -725,43 +697,7 @@ class MenuBar extends React.Component {
                                             )}
                                         </MenuItem>
                                     )}</FramerateChanger>
-                                    <ChangeUsername>{changeUsername => (
-                                        <MenuItem onClick={changeUsername}>
-                                            <FormattedMessage
-                                                defaultMessage="Change Username"
-                                                description="Menu bar item for changing the username"
-                                                id="tw.menuBar.changeUsername"
-                                            />
-                                        </MenuItem>
-                                    )}</ChangeUsername>
-                                    <CloudVariablesToggler>{(toggleCloudVariables, {enabled, canUseCloudVariables}) => (
-                                        <MenuItem
-                                            className={classNames({[styles.disabled]: !canUseCloudVariables})}
-                                            onClick={toggleCloudVariables}
-                                        >
-                                            {canUseCloudVariables ? (
-                                                enabled ? (
-                                                    <FormattedMessage
-                                                        defaultMessage="Disable Cloud Variables"
-                                                        description="Menu bar item for disabling cloud variables"
-                                                        id="tw.menuBar.cloudOff"
-                                                    />
-                                                ) : (
-                                                    <FormattedMessage
-                                                        defaultMessage="Enable Cloud Variables"
-                                                        description="Menu bar item for enabling cloud variables"
-                                                        id="tw.menuBar.cloudOn"
-                                                    />
-                                                )
-                                            ) : (
-                                                <FormattedMessage
-                                                    defaultMessage="Cloud Variables are not Available"
-                                                    description="Menu bar item for when cloud variables are not available"
-                                                    id="tw.menuBar.cloudUnavailable"
-                                                />
-                                            )}
-                                        </MenuItem>
-                                    )}</CloudVariablesToggler>
+
                                 </MenuSection>
                                 <MenuSection>
                                     <MenuItem onClick={this.props.onClickSettings}>
@@ -789,18 +725,6 @@ class MenuBar extends React.Component {
                                 </div>
                             </div>
                         )}
-                        <div
-                            className={classNames(styles.menuBarItem, styles.hoverable)}
-                            onMouseUp={this.props.onClickSettings}
-                        >
-                            <div>
-                                <FormattedMessage
-                                    defaultMessage="Advanced"
-                                    description="Text for advanced settings menu item"
-                                    id="tw.menuBar.advanced"
-                                />
-                            </div>
-                        </div>
                     </div>
                     <Divider className={classNames(styles.divider)} />
                     {this.props.canEditTitle ? (
@@ -815,6 +739,7 @@ class MenuBar extends React.Component {
                             </MenuBarItemTooltip>
                         </div>
                     ) : ((this.props.authorUsername && this.props.authorUsername !== this.props.username) ? (
+                        /*((1 == 1) ? (*/
                         <AuthorInfo
                             className={styles.authorInfo}
                             imageUrl={this.props.authorThumbnailUrl}
@@ -882,23 +807,6 @@ class MenuBar extends React.Component {
                         ) : []))}
                     </div>
                     {/* tw: add a feedback button */}
-                    <div className={styles.menuBarItem}>
-                        <a
-                            className={styles.feedbackLink}
-                            href="https://scratch.mit.edu/users/GarboMuffin/#comments"
-                            rel="noopener noreferrer"
-                            target="_blank"
-                        >
-                            {/* todo: icon */}
-                            <Button className={styles.feedbackButton}>
-                                <FormattedMessage
-                                    defaultMessage="TurboWarp Feedback"
-                                    description="Button to give feedback in the menu bar"
-                                    id="tw.feedbackButton"
-                                />
-                            </Button>
-                        </a>
-                    </div>
                 </div>
 
                 <div className={styles.accountInfoGroup}>
