@@ -1,12 +1,3 @@
-/* inserted by pull.js */
-import _twAsset0 from "!url-loader!./icon.svg";
-import _twAsset1 from "!url-loader!./search.svg";
-const _twGetAsset = (path) => {
-  if (path === "/icon.svg") return _twAsset0;
-  if (path === "/search.svg") return _twAsset1;
-  throw new Error(`Unknown asset: ${path}`);
-};
-
 export default async function ({ addon, console, msg }) {
   const vm = addon.tab.traps.vm;
 
@@ -60,7 +51,7 @@ export default async function ({ addon, console, msg }) {
 
   const varTabIcon = document.createElement("img");
   varTabIcon.draggable = false;
-  varTabIcon.src = _twGetAsset("/icon.svg");
+  varTabIcon.src = addon.self.getResource("/icon.svg") /* rewritten by pull.js */;
 
   const varTabText = document.createElement("span");
   varTabText.innerText = msg("variables");
@@ -186,8 +177,17 @@ export default async function ({ addon, console, msg }) {
           }
         }
 
+        let nameAlreadyUsed = false;
+        if (this.target.isStage) {
+          // Global variables must not conflict with any global variables or local variables in any sprite.
+          const existingNames = vm.runtime.getAllVarNamesOfType(this.scratchVariable.type);
+          nameAlreadyUsed = existingNames.includes(newName)
+        } else {
+          // Local variables must not conflict with any global variables or local variables in this sprite.
+          nameAlreadyUsed = !!workspace.getVariable(newName, this.scratchVariable.type)
+        }
+
         const isEmpty = !newName.trim();
-        const nameAlreadyUsed = !!workspace.getVariable(newName, this.scratchVariable.type);
         if (isEmpty || nameAlreadyUsed) {
           label.value = this.scratchVariable.name;
         } else {

@@ -1,12 +1,3 @@
-/* inserted by pull.js */
-import _twAsset0 from "!url-loader!./icon--mute.svg";
-import _twAsset1 from "!url-loader!./mute.svg";
-const _twGetAsset = (path) => {
-  if (path === "/icon--mute.svg") return _twAsset0;
-  if (path === "/mute.svg") return _twAsset1;
-  throw new Error(`Unknown asset: ${path}`);
-};
-
 import { setup, isMuted, onVolumeChanged, setMuted } from "../vol-slider/module.js";
 
 export default async function ({ addon, console }) {
@@ -15,7 +6,7 @@ export default async function ({ addon, console }) {
 
   const icon = document.createElement("img");
   icon.loading = "lazy";
-  icon.src = _twGetAsset("/mute.svg");
+  icon.src = addon.self.getResource("/mute.svg") /* rewritten by pull.js */;
   icon.className = "sa-mute-project-icon";
   icon.style.userSelect = "none";
   addon.tab.displayNoneWhileDisabled(icon);
