@@ -438,7 +438,7 @@ GUIComponent.propTypes = {
     canRemix: PropTypes.bool,
     canSave: PropTypes.bool,
     canShare: PropTypes.bool,
-    canUseCloud: PropTypes.bool,
+    canUseCloud: false,
     cardsVisible: PropTypes.bool,
     children: PropTypes.node,
     costumeLibraryVisible: PropTypes.bool,
