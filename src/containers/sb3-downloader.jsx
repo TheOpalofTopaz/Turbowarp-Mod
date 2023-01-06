@@ -155,8 +155,8 @@ class SB3Downloader extends React.Component {
                 }
             });
 
-            // Buffer repeated small messages into one big message to improve performance of write() later.
-            const MIN_BUFFER_SIZE = 65536;
+            // Buffer small messages into one bigger message to improve performance of write() later.
+            const MIN_BUFFER_SIZE = 1024 * 256;
             const queuedChunks = [];
             // eslint-disable-next-line no-undef
             const bufferTransformer = new TransformStream({
