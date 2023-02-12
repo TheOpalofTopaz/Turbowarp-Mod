@@ -6,17 +6,40 @@ import bindAll from 'lodash.bindall';
 import SecurityManagerModal from '../components/tw-security-manager-modal/security-manager-modal.jsx';
 import SecurityModals from '../lib/tw-security-manager-constants';
 
-// Extensions that start with these URLs will be loaded automatically and without a sandbox.
-// Be careful adding entries. Be sure to incldue the trailing / in your checks.
+/**
+ * Trusted extensions are loaded automatically and without a sandbox.
+ * @param {string} url URL as a string.
+ * @returns {boolean} True if the extension can is trusted
+ */
 const isTrustedExtension = url => (
+    // Always trust our official extension repostiory.
     url.startsWith('https://extensions.turbowarp.org/') ||
 
     // For development.
     url.startsWith('http://localhost:8000/')
 );
 
-// List of origins that have been allowed by the user.
-const allowedFetchOrigins = [];
+/**
+ * Set of fetch resource origins that were manually trusted by the user.
+ * @type {Set<string>}
+ */
+const fetchOriginsTrustedByUser = new Set();
+
+/**
+ * @param {URL} parsed Parsed URL object
+ * @returns {boolean} True if the URL is part of the builtin set of URLs to always trust fetching from.
+ */
+const isAlwaysTrustedForFetching = parsed => (
+    // Note that the regexes here don't need to be perfect. It's okay if we let extensions try to fetch
+    // resources from GitHub Pages domains that are invalid usernames. They'll just get an error.
+
+    // If we would trust loading an extension from here, we can trust loading resources too.
+    isTrustedExtension(parsed.href) ||
+
+    // GitHub
+    parsed.origin === 'https://raw.githubusercontent.com' ||
+    /^https:\/\/[a-z0-9-]{1,40}\.github\.io$/.test(parsed.origin)
+);
 
 /**
  * @param {string} url Original URL string
@@ -159,8 +182,11 @@ class TWSecurityManagerComponent extends React.Component {
         if (!parsed) {
             return;
         }
+        if (isAlwaysTrustedForFetching(parsed)) {
+            return true;
+        }
         const {showModal, releaseLock} = await this.acquireModalLock();
-        if (allowedFetchOrigins.includes(parsed.origin)) {
+        if (fetchOriginsTrustedByUser.has(origin)) {
             releaseLock();
             return true;
         }
@@ -169,7 +195,7 @@ class TWSecurityManagerComponent extends React.Component {
             url
         });
         if (allowed) {
-            allowedFetchOrigins.push(parsed.origin);
+            fetchOriginsTrustedByUser.add(origin);
         }
         return allowed;
     }
