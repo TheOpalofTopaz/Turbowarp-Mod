@@ -180,7 +180,7 @@ class TWSecurityManagerComponent extends React.Component {
     async canFetch (url) {
         const parsed = parseURL(url);
         if (!parsed) {
-            return;
+            return false;
         }
         if (isAlwaysTrustedForFetching(parsed)) {
             return true;
@@ -207,7 +207,7 @@ class TWSecurityManagerComponent extends React.Component {
     async canOpenWindow (url) {
         const parsed = parseURL(url);
         if (!parsed) {
-            return;
+            return false;
         }
         const {showModal} = await this.acquireModalLock();
         return showModal({
@@ -223,7 +223,7 @@ class TWSecurityManagerComponent extends React.Component {
     async canRedirect (url) {
         const parsed = parseURL(url);
         if (!parsed) {
-            return;
+            return false;
         }
         const {showModal} = await this.acquireModalLock();
         return showModal({
