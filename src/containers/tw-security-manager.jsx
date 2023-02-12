@@ -48,8 +48,10 @@ class TWSecurityManagerComponent extends React.Component {
             'handleAllowed',
             'handleDenied'
         ]);
+        this.nextModalCallbacks = [];
+        this.modalLocked = false;
         this.state = {
-            modals: []
+            modal: null
         };
     }
 
@@ -62,35 +64,62 @@ class TWSecurityManagerComponent extends React.Component {
         securityManager.canRedirect = this.canRedirect;
     }
 
+    // eslint-disable-next-line valid-jsdoc
     /**
-     * @param {unknown} data Data to give to the modal component.
-     * @returns {Promise<boolean>} True if the request was allowed
+     * @returns {Promise<() => Promise<boolean>>} Resolves with a function that you can call to show the modal.
+     * The resolved function returns a promise that resolves with true if the request was approved.
      */
-    queueModal (data) {
-        return new Promise(resolve => {
-            this.setState(oldState => ({
-                modals: [...oldState.modals, {
-                    data,
-                    callback: resolve
-                }]
-            }));
-        });
-    }
+    async acquireModalLock () {
+        // We need a two-step process for showing a modal so that we don't overwrite or overlap modals,
+        // and so that multiple attempts to fetch resources from the same origin will all be allowed
+        // with just one click. This means that some places have to wait until previous modals are
+        // closed before it knows if it needs to display another modal.
 
-    finishModal (result) {
-        const firstModal = this.state.modals[0];
-        firstModal.callback(result);
-        this.setState(oldState => ({
-            modals: oldState.modals.slice(1)
-        }));
+        if (this.modalLocked) {
+            await new Promise(resolve => {
+                this.nextModalCallbacks.push(resolve);
+            });
+        } else {
+            this.modalLocked = true;
+        }
+
+        const releaseLock = () => {
+            if (this.nextModalCallbacks.length) {
+                const nextModalCallback = this.nextModalCallbacks.shift();
+                nextModalCallback();
+            } else {
+                this.modalLocked = false;
+                this.setState({
+                    modal: null
+                });
+            }
+        };
+
+        const showModal = async data => {
+            const result = await new Promise(resolve => {
+                this.setState({
+                    modal: {
+                        ...data,
+                        callback: resolve
+                    }
+                });
+            });
+            releaseLock();
+            return result;
+        };
+
+        return {
+            showModal,
+            releaseLock
+        };
     }
 
     handleAllowed () {
-        this.finishModal(true);
+        this.state.modal.callback(true);
     }
 
     handleDenied () {
-        this.finishModal(false);
+        this.state.modal.callback(false);
     }
 
     /**
@@ -109,12 +138,13 @@ class TWSecurityManagerComponent extends React.Component {
      * @param {string} url The extension's URL
      * @returns {Promise<boolean>} Whether the extension can be loaded
      */
-    canLoadExtensionFromProject (url) {
+    async canLoadExtensionFromProject (url) {
         if (isTrustedExtension(url)) {
             log.info(`Loading extension ${url} automatically`);
             return true;
         }
-        return this.queueModal({
+        const {showModal} = await this.acquireModalLock();
+        return showModal({
             type: SecurityModals.LoadExtension,
             url
         });
@@ -129,10 +159,12 @@ class TWSecurityManagerComponent extends React.Component {
         if (!parsed) {
             return;
         }
+        const {showModal, releaseLock} = await this.acquireModalLock();
         if (allowedFetchOrigins.includes(parsed.origin)) {
+            releaseLock();
             return true;
         }
-        const allowed = await this.queueModal({
+        const allowed = await showModal({
             type: SecurityModals.Fetch,
             url
         });
@@ -146,12 +178,13 @@ class TWSecurityManagerComponent extends React.Component {
      * @param {string} url The website to open
      * @returns {Promise<boolean>} True if the website can be opened
      */
-    canOpenWindow (url) {
+    async canOpenWindow (url) {
         const parsed = parseURL(url);
         if (!parsed) {
             return;
         }
-        return this.queueModal({
+        const {showModal} = await this.acquireModalLock();
+        return showModal({
             type: SecurityModals.OpenWindow,
             url
         });
@@ -161,24 +194,25 @@ class TWSecurityManagerComponent extends React.Component {
      * @param {string} url The website to redirect to
      * @returns {Promise<boolean>} True if the website can be redirected to
      */
-    canRedirect (url) {
+    async canRedirect (url) {
         const parsed = parseURL(url);
         if (!parsed) {
             return;
         }
-        return this.queueModal({
+        const {showModal} = await this.acquireModalLock();
+        return showModal({
             type: SecurityModals.Redirect,
             url
         });
     }
 
     render () {
-        if (this.state.modals.length) {
-            const modal = this.state.modals[0];
+        if (this.state.modal) {
+            const modal = this.state.modal;
             return (
                 <SecurityManagerModal
-                    type={modal.data.type}
-                    url={modal.data.url}
+                    type={modal.type}
+                    url={modal.url}
                     onAllowed={this.handleAllowed}
                     onDenied={this.handleDenied}
                 />
