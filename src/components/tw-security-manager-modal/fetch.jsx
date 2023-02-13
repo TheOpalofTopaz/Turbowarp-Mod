@@ -6,7 +6,7 @@ import styles from './security-manager-modal.css';
 const FetchModal = props => (
     <div>
         <FormattedMessage
-            defaultMessage="The project wants to access the resource at:"
+            defaultMessage="The project wants to connect to the website:"
             description="Part of modal when a project asks permission to fetch a URL"
             id="tw.fetch.title"
         />
@@ -16,7 +16,7 @@ const FetchModal = props => (
         <p>
             <FormattedMessage
                 // eslint-disable-next-line max-len
-                defaultMessage="The project may use this to load additional images or sounds, to access information from a public API, or for malicious purposes."
+                defaultMessage="The project may require this to download additional images or sounds, implement multiplayer, access an API, or malicious purposes."
                 description="Part of modal shown when a project asks permission to fetch a URL"
                 id="tw.securityManager.why"
             />
@@ -24,7 +24,7 @@ const FetchModal = props => (
         <p>
             <FormattedMessage
                 // eslint-disable-next-line max-len
-                defaultMessage="This isn't a security risk, but it may share your IP address, general location, and other data from the project with the website."
+                defaultMessage="This may share your IP address, general location, and other data from the project with the website."
                 description="Part of modal shown when a project asks permission to fetch a URL"
                 id="tw.securityManager.risk"
             />
