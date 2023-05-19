@@ -16,7 +16,8 @@
 .body p,
 .unsandboxed-container,
 .button-row,
-.url-input {
+.url-input,
+.text-code-input {
     margin: 1rem 0;
     display: block;
 }
@@ -26,11 +27,11 @@
 }
 .type-selector {
     cursor: pointer;
-    border-bottom: 4px solid $ui-tertiary;
+    border-bottom: 0.25rem solid $ui-tertiary;
     text-align: center;
     flex-grow: 1;
-    margin: 0 16px;
-    padding: 8px 0;
+    margin: 0 1rem;
+    padding: 0.5rem 0;
 }
 .type-selector[data-active="true"] {
     border-color: $motion-primary;
@@ -40,9 +41,8 @@
 .text-code-input {
     width: 100%;
     border: 1px solid $ui-black-transparent;
-    border-radius: 5px;
-    color: $text-primary-transparent;
-    padding: 1rem;
+    border-radius: 0.25rem;
+    padding: 0.5rem;
     font-size: inherit;
 }
 [theme="dark"] .url-input,
@@ -64,12 +64,12 @@
     align-items: center;
 }
 .unsandboxed-checkbox {
-    margin-right: 8px;
+    margin-right: 0.5rem;
 }
 .trusted-extension,
 .unsandboxed-warning {
-    padding: 8px;
-    border-radius: 5px;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
 }
 .trusted-extension {
     background-color: rgba(94, 255, 94, 0.25);

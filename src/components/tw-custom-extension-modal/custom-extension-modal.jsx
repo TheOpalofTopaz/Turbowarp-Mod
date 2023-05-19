@@ -78,7 +78,7 @@ const CustomExtensionModal = props => (
                         value={props.url}
                         onChange={props.onChangeURL}
                         onKeyDown={props.onKeyDown}
-                        placeholder="https://extensions.turbowarp.org/"
+                        placeholder="https://extensions.turbowarp.org/stretch.js"
                         autoFocus
                     />
                 </React.Fragment>
@@ -116,8 +116,6 @@ const CustomExtensionModal = props => (
                 </React.Fragment>
             )}
 
-            {/* eslint-disable max-len */}
-            {/* eslint-disable-next-line no-negated-condition */}
             <label className={styles.unsandboxedContainer}>
                 <FancyCheckbox
                     className={styles.unsandboxedCheckbox}
@@ -134,6 +132,7 @@ const CustomExtensionModal = props => (
             {props.defaultUnsandboxed ? (
                 <p className={styles.trustedExtension}>
                     <FormattedMessage
+                        // eslint-disable-next-line max-len
                         defaultMessage="This extension will always be loaded without the sandbox because it is from a trusted source."
                         description="Message that appears in custom extension prompt"
                         id="tw.customExtensionModal.trusted"
@@ -142,13 +141,13 @@ const CustomExtensionModal = props => (
             ) : props.forceUnsandboxed ? (
                 <div className={styles.unsandboxedWarning}>
                     <FormattedMessage
-                        defaultMessage="Loading unknown extensions wihout the sandbox is dangerous. If you are't sure what this means, please disable this option."
+                        // eslint-disable-next-line max-len
+                        defaultMessage="Loading unknown extensions without the sandbox is dangerous. If you are't sure what this means, please disable this option."
                         description="Warning to not disable the sandbox for no reason"
-                        id="tw.unsandboxedWarning.1"
+                        id="tw.customExtensionModal.unsandboxedWarning"
                     />
                 </div>
             ) : null}
-            {/* eslint-enable max-len */}
 
             <div className={styles.buttonRow}>
                 <button

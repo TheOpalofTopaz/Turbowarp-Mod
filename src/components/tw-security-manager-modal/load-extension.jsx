@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {FormattedMessage} from 'react-intl';
 import styles from './load-extension.css';
 import URL from './url.jsx';
+import FancyCheckbox from '../tw-fancy-checkbox/checkbox.jsx';
 
 /**
  * @param {string} dataURI data: URI
@@ -54,27 +55,45 @@ const LoadExtensionModal = props => (
                 <URL url={props.url} />
             </React.Fragment>
         )}
-        <p>
-            <FormattedMessage
-                // eslint-disable-next-line max-len
-                defaultMessage="While the code will be sandboxed for security, it will be able to access information about your device such as your IP address and general location."
-                description="Part of modal shown when asking for permission to automatically load custom extension"
-                id="tw.securityManager.download"
+
+        <label className={styles.unsandboxedContainer}>
+            <FancyCheckbox
+                className={styles.unsandboxedCheckbox}
+                checked={props.unsandboxed}
+                onChange={props.onChangeUnsandboxed}
             />
-        </p>
-        <p>
             <FormattedMessage
-                // eslint-disable-next-line max-len
-                defaultMessage="Make sure you trust the author of this extension before continuing."
-                description="Part of modal shown when asking for permission to automatically load custom extension"
-                id="tw.securityManager.trust"
+                defaultMessage="Force this extension to run unsandboxed"
+                description="Part of modal asking for permission to automatically load custom extension"
+                id="tw.loadExtension.unsandboxed"
             />
-        </p>
+        </label>
+        {props.unsandboxed ? (
+            <div className={styles.unsandboxedWarning}>
+                <FormattedMessage
+                    // eslint-disable-next-line max-len
+                    defaultMessage="Loading unknown extensions without the sandbox is dangerous. If you are't sure what this means, please disable this option."
+                    description="Part of modal asking for permission to automatically load custom extension"
+                    id="tw.loadExtension.unsandboxedWarning"
+                />
+            </div>
+        ) : (
+            <div className={styles.sandboxed}>
+                <FormattedMessage
+                    // eslint-disable-next-line max-len
+                    defaultMessage="While the code will be sandboxed, it will have access to information about your device such as your IP and general location. Make sure you trust the author of this extension before continuing."
+                    description="Part of modal asking for permission to automatically load custom extension"
+                    id="tw.loadExtension.sandboxed"
+                />
+            </div>
+        )}
     </div>
 );
 
 LoadExtensionModal.propTypes = {
-    url: PropTypes.string.isRequired
+    url: PropTypes.string.isRequired,
+    unsandboxed: PropTypes.bool.isRequired,
+    onChangeUnsandboxed: PropTypes.func.isRequired
 };
 
 export default LoadExtensionModal;
