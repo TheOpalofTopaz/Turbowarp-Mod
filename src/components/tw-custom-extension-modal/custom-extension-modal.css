@@ -15,7 +15,6 @@
 
 .body p,
 .unsandboxed-container,
-.button-row,
 .url-input,
 .text-code-input {
     margin: 1rem 0;
@@ -24,16 +23,17 @@
 
 .type-selector-container {
     display: flex;
+    justify-content: space-around;
 }
-.type-selector {
+.type-selector-button {
+    width: 25%;
     cursor: pointer;
     border-bottom: 0.25rem solid $ui-tertiary;
     text-align: center;
-    flex-grow: 1;
     margin: 0 1rem;
     padding: 0.5rem 0;
 }
-.type-selector[data-active="true"] {
+.type-selector-button[data-active="true"] {
     border-color: $motion-primary;
 }
 
@@ -52,7 +52,6 @@
 }
 .url-input {
     height: 3rem;
-    font-family: inherit;
 }
 .text-code-input {
     height: 10rem;
@@ -78,6 +77,10 @@
 .unsandboxed-warning {
     background-color: rgba(255, 81, 81, 0.25);
     border: 1px solid red;
+}
+.unsandboxed-warning > *:not(:last-child) {
+    display: block;
+    margin-bottom: 4px;
 }
 
 .button-row {
