@@ -4,6 +4,7 @@ import {FormattedMessage} from 'react-intl';
 import styles from './load-extension.css';
 import URL from './url.jsx';
 import FancyCheckbox from '../tw-fancy-checkbox/checkbox.jsx';
+import {APP_NAME} from '../../lib/brand';
 
 /**
  * @param {string} dataURI data: URI
@@ -56,32 +57,40 @@ const LoadExtensionModal = props => (
             </React.Fragment>
         )}
 
-        <label className={styles.unsandboxedContainer}>
-            <FancyCheckbox
-                className={styles.unsandboxedCheckbox}
-                checked={props.unsandboxed}
-                onChange={props.onChangeUnsandboxed}
-            />
-            <FormattedMessage
-                defaultMessage="Force this extension to run unsandboxed"
-                description="Part of modal asking for permission to automatically load custom extension"
-                id="tw.loadExtension.unsandboxed"
-            />
-        </label>
-        {props.unsandboxed ? (
-            <div className={styles.unsandboxedWarning}>
-                <FormattedMessage
-                    // eslint-disable-next-line max-len
-                    defaultMessage="Loading unknown extensions without the sandbox is dangerous. If you are't sure what this means, please disable this option."
-                    description="Part of modal asking for permission to automatically load custom extension"
-                    id="tw.loadExtension.unsandboxedWarning"
-                />
-            </div>
-        ) : (
+        {props.onChangeUnsandboxed && (
+            <React.Fragment>
+                <label className={styles.unsandboxedContainer}>
+                    <FancyCheckbox
+                        className={styles.unsandboxedCheckbox}
+                        checked={props.unsandboxed}
+                        onChange={props.onChangeUnsandboxed}
+                    />
+                    <FormattedMessage
+                        defaultMessage="Run extension without sandbox"
+                        description="Part of modal asking for permission to automatically load custom extension"
+                        id="tw.loadExtension.unsandboxed"
+                    />
+                </label>
+                {props.unsandboxed && (
+                    <div className={styles.unsandboxedWarning}>
+                        <FormattedMessage
+                            // eslint-disable-next-line max-len
+                            defaultMessage="Loading extensions without the sandbox is dangerous. It will be able to corrupt your project, delete your settings, phish for passwords, and other bad things. The {APP_NAME} developers are not responsible for any resulting issues."
+                            description="Part of modal asking for permission to automatically load custom extension"
+                            id="tw.loadExtension.unsandboxedWarning"
+                            values={{
+                                APP_NAME
+                            }}
+                        />
+                    </div>
+                )}
+            </React.Fragment>
+        )}
+        {!props.unsandboxed && (
             <div className={styles.sandboxed}>
                 <FormattedMessage
                     // eslint-disable-next-line max-len
-                    defaultMessage="While the code will be sandboxed, it will have access to information about your device such as your IP and general location. Make sure you trust the author of this extension before continuing."
+                    defaultMessage="While the code will be sandboxed, it will still have access to information about your device such as your IP and general location. Make sure you trust the author of this extension before continuing."
                     description="Part of modal asking for permission to automatically load custom extension"
                     id="tw.loadExtension.sandboxed"
                 />
@@ -93,7 +102,7 @@ const LoadExtensionModal = props => (
 LoadExtensionModal.propTypes = {
     url: PropTypes.string.isRequired,
     unsandboxed: PropTypes.bool.isRequired,
-    onChangeUnsandboxed: PropTypes.func.isRequired
+    onChangeUnsandboxed: PropTypes.func
 };
 
 export default LoadExtensionModal;
