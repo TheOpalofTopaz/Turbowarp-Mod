@@ -195,7 +195,7 @@ class TWSecurityManagerComponent extends React.Component {
         return 'iframe';
     }
 
-    handleChangeSandboxed (e) {
+    handleChangeUnsandboxed (e) {
         const checked = e.target.checked;
         this.setState(oldState => ({
             data: {
@@ -219,7 +219,7 @@ class TWSecurityManagerComponent extends React.Component {
             const allowed = await showModal(SecurityModals.LoadExtension, {
                 url,
                 unsandboxed: false,
-                onChangeUnsandboxed: this.handleChangeSandboxed.bind(this)
+                onChangeUnsandboxed: this.handleChangeUnsandboxed.bind(this)
             });
             if (this.state.data.unsandboxed) {
                 manuallyTrustExtension(url);
