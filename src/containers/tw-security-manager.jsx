@@ -20,7 +20,7 @@ const manuallyTrustExtension = url => {
  * @param {string} url URL as a string.
  * @returns {boolean} True if the extension can is trusted
  */
-export const isTrustedExtension = url => (
+const isTrustedExtension = url => (
     // Always trust our official extension repostiory.
     url.startsWith('https://extensions.turbowarp.org/') ||
 
@@ -330,5 +330,6 @@ const ConnectedSecurityManagerComponent = connect(
 
 export {
     ConnectedSecurityManagerComponent as default,
-    manuallyTrustExtension
+    manuallyTrustExtension,
+    isTrustedExtension
 };
