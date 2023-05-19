@@ -1,18 +1,59 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {FormattedMessage} from 'react-intl';
-import styles from './security-manager-modal.css';
+import styles from './load-extension.css';
+import URL from './url.jsx';
+
+/**
+ * @param {string} dataURI data: URI
+ * @returns {string} A hopefully human-readable version
+ */
+const decodeDataURI = dataURI => {
+    const delimeter = dataURI.indexOf(',');
+    if (delimeter === -1) {
+        return dataURI;
+    }
+    const contentType = dataURI.substring(0, delimeter);
+    const data = dataURI.substring(delimeter + 1);
+    if (contentType.endsWith(';base64')) {
+        try {
+            return atob(data);
+        } catch (e) {
+            return dataURI;
+        }
+    }
+    try {
+        return decodeURIComponent(data);
+    } catch (e) {
+        return dataURI;
+    }
+};
 
 const LoadExtensionModal = props => (
     <div>
-        <FormattedMessage
-            defaultMessage="The project wants to load the custom extension:"
-            description="Part of modal when a project attempts to automatically load an extenson"
-            id="tw.loadExtension.title"
-        />
-        <p className={styles.url}>
-            {props.url}
-        </p>
+        {props.url.startsWith('data:') ? (
+            <React.Fragment>
+                <FormattedMessage
+                    defaultMessage="The project wants to load a custom extension with the code:"
+                    description="Part of modal asking for permission to automatically load custom extension"
+                    id="tw.loadExtension.embedded"
+                />
+                <textarea
+                    className={styles.code}
+                    value={decodeDataURI(props.url)}
+                    readOnly
+                />
+            </React.Fragment>
+        ) : (
+            <React.Fragment>
+                <FormattedMessage
+                    defaultMessage="The project wants to load a custom extension from the URL:"
+                    description="Part of modal asking for permission to automatically load custom extension"
+                    id="tw.loadExtension.url"
+                />
+                <URL url={props.url} />
+            </React.Fragment>
+        )}
         <p>
             <FormattedMessage
                 // eslint-disable-next-line max-len

@@ -205,7 +205,9 @@ class TWSecurityManagerComponent extends React.Component {
         const {showModal} = await this.acquireModalLock();
         return showModal({
             type: SecurityModals.LoadExtension,
-            url
+            data: {
+                url
+            }
         });
     }
 
@@ -228,7 +230,9 @@ class TWSecurityManagerComponent extends React.Component {
         }
         const allowed = await showModal({
             type: SecurityModals.Fetch,
-            url
+            data: {
+                url
+            }
         });
         if (allowed) {
             fetchOriginsTrustedByUser.add(origin);
@@ -248,7 +252,9 @@ class TWSecurityManagerComponent extends React.Component {
         const {showModal} = await this.acquireModalLock();
         return showModal({
             type: SecurityModals.OpenWindow,
-            url
+            data: {
+                url
+            }
         });
     }
 
@@ -264,7 +270,9 @@ class TWSecurityManagerComponent extends React.Component {
         const {showModal} = await this.acquireModalLock();
         return showModal({
             type: SecurityModals.Redirect,
-            url
+            data: {
+                url
+            }
         });
     }
 
@@ -274,7 +282,7 @@ class TWSecurityManagerComponent extends React.Component {
             return (
                 <SecurityManagerModal
                     type={modal.type}
-                    url={modal.url}
+                    data={modal.data}
                     onAllowed={this.handleAllowed}
                     onDenied={this.handleDenied}
                 />

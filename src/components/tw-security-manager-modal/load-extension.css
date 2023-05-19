@@ -1,0 +1,17 @@
+@import "../../css/colors.css";
+
+.code {
+    width: 100%;
+    border: 1px solid $ui-black-transparent;
+    border-radius: 5px;
+    color: $text-primary-transparent;
+    padding: 0.25rem;
+    font-size: 0.875rem;
+    font-family: monospace;
+    height: 5rem;
+    margin: 8px 0;
+}
+[theme="dark"] .code {
+    background: $ui-secondary;
+    color: white;
+}
