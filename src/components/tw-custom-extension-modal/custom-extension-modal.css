@@ -60,11 +60,24 @@
 }
 
 .unsandboxed-container {
-    display: block;
+    display: flex;
+    align-items: center;
 }
-
-.danger {
-    font-weight: bold;
+.unsandboxed-checkbox {
+    margin-right: 8px;
+}
+.trusted-extension,
+.unsandboxed-warning {
+    padding: 8px;
+    border-radius: 5px;
+}
+.trusted-extension {
+    background-color: rgba(94, 255, 94, 0.25);
+    border: 1px solid green;
+}
+.unsandboxed-warning {
+    background-color: rgba(255, 81, 81, 0.25);
+    border: 1px solid red;
 }
 
 .button-row {

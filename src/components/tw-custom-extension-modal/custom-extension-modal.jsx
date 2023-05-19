@@ -5,6 +5,7 @@ import Box from '../box/box.jsx';
 import Modal from '../../containers/modal.jsx';
 import FileInput from './file-input.jsx';
 import styles from './custom-extension-modal.css';
+import FancyCheckbox from '../tw-fancy-checkbox/checkbox.jsx';
 
 const messages = defineMessages({
     title: {
@@ -77,7 +78,7 @@ const CustomExtensionModal = props => (
                         value={props.url}
                         onChange={props.onChangeURL}
                         onKeyDown={props.onKeyDown}
-                        placeholder="https://"
+                        placeholder="https://extensions.turbowarp.org/"
                         autoFocus
                     />
                 </React.Fragment>
@@ -110,35 +111,44 @@ const CustomExtensionModal = props => (
                         placeholder={'class Extension {\n  // ...\n}\nScratch.extensions.register(new Extension());'}
                         value={props.text}
                         onChange={props.onChangeText}
+                        autoFocus
                     />
                 </React.Fragment>
             )}
 
-            <label
-                className={styles.unsandboxedContainer}
-            >
-                <input
-                    type="checkbox"
-                    onChange={props.onChangeUnsandboxed}
-                    checked={props.unsandboxed}
+            {/* eslint-disable max-len */}
+            {/* eslint-disable-next-line no-negated-condition */}
+            <label className={styles.unsandboxedContainer}>
+                <FancyCheckbox
+                    className={styles.unsandboxedCheckbox}
+                    checked={props.defaultUnsandboxed || props.forceUnsandboxed}
+                    onChange={props.onChangeForceUnsandboxed}
+                    disabled={styles.defaultUnsandboxed}
                 />
-                {' '}
                 <FormattedMessage
-                    defaultMessage="Force load unsandboxed"
-                    description="Checkbox to load a custom extension without the sandbox"
+                    defaultMessage="Force this extension to run unsandboxed"
+                    description="Message that appears in custom extension prompt"
                     id="tw.customExtensionModal.unsandboxed"
                 />
             </label>
-
-            {props.unsandboxed && (
-                <p className={styles.danger}>
+            {props.defaultUnsandboxed ? (
+                <p className={styles.trustedExtension}>
                     <FormattedMessage
-                        defaultMessage="Loading extensions as unsandboxed is dangerous."
-                        description="Message explainin why enabling the unsandboxed checkbox is dangerous"
-                        id="tw.customExtensionModal.unsandboxedDanger"
+                        defaultMessage="This extension will always be loaded without the sandbox because it is from a trusted source."
+                        description="Message that appears in custom extension prompt"
+                        id="tw.customExtensionModal.trusted"
                     />
                 </p>
-            )}
+            ) : props.forceUnsandboxed ? (
+                <div className={styles.unsandboxedWarning}>
+                    <FormattedMessage
+                        defaultMessage="Loading unknown extensions wihout the sandbox is dangerous. If you are't sure what this means, please disable this option."
+                        description="Warning to not disable the sandbox for no reason"
+                        id="tw.unsandboxedWarning.1"
+                    />
+                </div>
+            ) : null}
+            {/* eslint-enable max-len */}
 
             <div className={styles.buttonRow}>
                 <button
@@ -174,8 +184,9 @@ CustomExtensionModal.propTypes = {
     onKeyDown: PropTypes.func.isRequired,
     text: PropTypes.string.isRequired,
     onChangeText: PropTypes.func.isRequired,
-    unsandboxed: PropTypes.bool.isRequired,
-    onChangeUnsandboxed: PropTypes.func.isRequired,
+    defaultUnsandboxed: PropTypes.bool.isRequired,
+    forceUnsandboxed: PropTypes.bool.isRequired,
+    onChangeForceUnsandboxed: PropTypes.func.isRequired,
     onLoadExtension: PropTypes.func.isRequired,
     onClose: PropTypes.func.isRequired
 };

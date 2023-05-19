@@ -20,7 +20,7 @@ const manuallyTrustExtension = url => {
  * @param {string} url URL as a string.
  * @returns {boolean} True if the extension can is trusted
  */
-const isTrustedExtension = url => (
+export const isTrustedExtension = url => (
     // Always trust our official extension repostiory.
     url.startsWith('https://extensions.turbowarp.org/') ||
 
