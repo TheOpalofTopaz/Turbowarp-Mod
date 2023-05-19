@@ -19,6 +19,8 @@ class CustomExtensionModal extends React.Component {
             'handleLoadExtension',
             'handleSwitchToFile',
             'handleSwitchToURL',
+            'handleSwitchToText',
+            'handleChangeText',
             'handleDragOver',
             'handleDragLeave',
             'handleDrop'
@@ -28,6 +30,7 @@ class CustomExtensionModal extends React.Component {
             type: 'url',
             url: '',
             file: null,
+            text: '',
             unsandboxed: false
         };
     }
@@ -43,6 +46,9 @@ class CustomExtensionModal extends React.Component {
                 reader.readAsDataURL(this.state.file);
             });
         }
+        if (this.state.type === 'text') {
+            return `data:application/javascript;,${encodeURIComponent(this.state.text)}`;
+        }
         return Promise.reject(new Error('Unknown type'));
     }
     hasValidInput () {
@@ -51,6 +57,9 @@ class CustomExtensionModal extends React.Component {
         }
         if (this.state.type === 'file') {
             return !!this.state.file;
+        }
+        if (this.state.type === 'text') {
+            return !!this.state.text;
         }
         return false;
     }
@@ -102,6 +111,16 @@ class CustomExtensionModal extends React.Component {
             type: 'url'
         });
     }
+    handleSwitchToText () {
+        this.setState({
+            type: 'text'
+        });
+    }
+    handleChangeText (e) {
+        this.setState({
+            text: e.target.value
+        });
+    }
     handleDragOver (e) {
         if (e.dataTransfer.types.includes('Files')) {
             e.preventDefault();
@@ -128,6 +147,7 @@ class CustomExtensionModal extends React.Component {
                 type={this.state.type}
                 onSwitchToFile={this.handleSwitchToFile}
                 onSwitchToURL={this.handleSwitchToURL}
+                onSwitchToText={this.handleSwitchToText}
                 file={this.state.file}
                 onChangeFile={this.handleChangeFile}
                 onDragOver={this.handleDragOver}
@@ -136,6 +156,8 @@ class CustomExtensionModal extends React.Component {
                 url={this.state.url}
                 onChangeURL={this.handleChangeURL}
                 onKeyDown={this.handleKeyDown}
+                text={this.state.text}
+                onChangeText={this.handleChangeText}
                 unsandboxed={this.state.unsandboxed}
                 onChangeUnsandboxed={this.handleChangeUnsandboxed}
                 onLoadExtension={this.handleLoadExtension}

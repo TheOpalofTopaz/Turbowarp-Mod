@@ -48,14 +48,26 @@ const CustomExtensionModal = props => (
                         id="tw.customExtensionModal.file"
                     />
                 </div>
+                <div
+                    className={styles.typeSelector}
+                    data-active={props.type === 'text'}
+                    onClick={props.onSwitchToText}
+                    tabIndex={0}
+                >
+                    <FormattedMessage
+                        defaultMessage="Text"
+                        description="Button to choose to load an extension from a text input"
+                        id="tw.customExtensionModal.text"
+                    />
+                </div>
             </div>
 
             {props.type === 'url' ? (
                 <React.Fragment key={props.type}>
                     <p>
                         <FormattedMessage
-                            defaultMessage="Enter the URL of the extension:"
-                            description="Label that when loading custom extension by URL"
+                            defaultMessage="Enter the extension's URL:"
+                            description="Label that appears when loading a custom extension from a URL"
                             id="tw.customExtensionModal.promptURL"
                         />
                     </p>
@@ -68,32 +80,13 @@ const CustomExtensionModal = props => (
                         placeholder="https://"
                         autoFocus
                     />
-                    <p>
-                        <FormattedMessage
-                            defaultMessage="If you're not sure what to put here, {gallery} is a great place to start."
-                            // eslint-disable-next-line max-len
-                            description="Message in custom extension modal that describes where to find custom extension URLs"
-                            id="tw.customExtensionModal.where"
-                            values={{
-                                gallery: (
-                                    <a
-                                        href="https://extensions.turbowarp.org/"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                    >
-                                        {'extensions.turbowarp.org'}
-                                    </a>
-                                )
-                            }}
-                        />
-                    </p>
                 </React.Fragment>
-            ) : (
+            ) : props.type === 'file' ? (
                 <React.Fragment key={props.type}>
                     <p>
                         <FormattedMessage
-                            defaultMessage="Select extension file:"
-                            description="Prompt that appears when loading custom extension from a local file"
+                            defaultMessage="Select the extension's JavaScript file:"
+                            description="Label that appears when loading a custom extension from a file"
                             id="tw.customExtensionModal.promptFile"
                         />
                     </p>
@@ -101,6 +94,22 @@ const CustomExtensionModal = props => (
                         accept=".js"
                         onChange={props.onChangeFile}
                         file={props.file}
+                    />
+                </React.Fragment>
+            ) : (
+                <React.Fragment key={props.type}>
+                    <p>
+                        <FormattedMessage
+                            defaultMessage="Enter the extension's JavaScript source code:"
+                            description="Label that appears when loading a custom extension from a text input"
+                            id="tw.customExtensionModal.promptText"
+                        />
+                    </p>
+                    <textarea
+                        className={styles.textCodeInput}
+                        placeholder={'class Extension {\n  // ...\n}\nScratch.extensions.register(new Extension());'}
+                        value={props.text}
+                        onChange={props.onChangeText}
                     />
                 </React.Fragment>
             )}
@@ -151,9 +160,10 @@ const CustomExtensionModal = props => (
 CustomExtensionModal.propTypes = {
     intl: intlShape,
     canLoadExtension: PropTypes.bool.isRequired,
-    type: PropTypes.oneOf(['url', 'file']).isRequired,
+    type: PropTypes.oneOf(['url', 'file', 'text']).isRequired,
     onSwitchToFile: PropTypes.func.isRequired,
     onSwitchToURL: PropTypes.func.isRequired,
+    onSwitchToText: PropTypes.func.isRequired,
     file: PropTypes.instanceOf(File),
     onChangeFile: PropTypes.func.isRequired,
     onDragOver: PropTypes.func.isRequired,
@@ -162,6 +172,8 @@ CustomExtensionModal.propTypes = {
     url: PropTypes.string.isRequired,
     onChangeURL: PropTypes.func.isRequired,
     onKeyDown: PropTypes.func.isRequired,
+    text: PropTypes.string.isRequired,
+    onChangeText: PropTypes.func.isRequired,
     unsandboxed: PropTypes.bool.isRequired,
     onChangeUnsandboxed: PropTypes.func.isRequired,
     onLoadExtension: PropTypes.func.isRequired,
