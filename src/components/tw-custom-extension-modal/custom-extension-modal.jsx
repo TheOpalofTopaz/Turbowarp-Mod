@@ -109,7 +109,7 @@ const CustomExtensionModal = props => (
                 <React.Fragment key={props.type}>
                     <p>
                         <FormattedMessage
-                            defaultMessage="Enter the extension's JavaScript source code:"
+                            defaultMessage="Paste the extension's JavaScript source code:"
                             description="Label that appears when loading a custom extension from a text input"
                             id="tw.customExtensionModal.promptText"
                         />
@@ -120,6 +120,7 @@ const CustomExtensionModal = props => (
                         value={props.text}
                         onChange={props.onChangeText}
                         autoFocus
+                        spellCheck={false}
                     />
                 </React.Fragment>
             )}

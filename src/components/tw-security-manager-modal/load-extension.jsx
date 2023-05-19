@@ -44,6 +44,7 @@ const LoadExtensionModal = props => (
                     className={styles.code}
                     value={decodeDataURI(props.url)}
                     readOnly
+                    spellCheck={false}
                 />
             </React.Fragment>
         ) : (
