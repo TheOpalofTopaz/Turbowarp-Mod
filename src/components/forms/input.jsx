@@ -16,7 +16,7 @@ const Input = props => {
                     [styles.inputSmall]: small
                 }
             )}
-        />
+        autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
     );
 };
 
