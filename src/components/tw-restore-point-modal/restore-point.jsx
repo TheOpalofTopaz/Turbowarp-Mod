@@ -1,10 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {FormattedMessage, FormattedDate, FormattedTime} from 'react-intl';
+import {FormattedMessage, FormattedDate, FormattedTime, FormattedRelative} from 'react-intl';
 import bindAll from 'lodash.bindall';
 import styles from './restore-point-modal.css';
 import {formatBytes} from '../../lib/tw-bytes-utils';
 import RestorePointAPI from '../../lib/tw-restore-point-api';
+
+// Browser support is not perfect yet
+const relativeTimeSupported = () => typeof Intl !== 'undefined' && typeof Intl.RelativeTimeFormat !== 'undefined';
 
 class RestorePoint extends React.Component {
     constructor (props) {
@@ -82,9 +85,16 @@ class RestorePoint extends React.Component {
                     </div>
 
                     <div>
+                        {relativeTimeSupported() && (
+                            <span>
+                                <FormattedRelative value={createdDate} />
+                                {' ('}
+                            </span>
+                        )}
                         <FormattedDate value={createdDate} />
                         {', '}
                         <FormattedTime value={createdDate} />
+                        {relativeTimeSupported() && ')'}
                     </div>
 
                     <div>
@@ -100,16 +110,6 @@ class RestorePoint extends React.Component {
                             }}
                         />
                     </div>
-
-                    {this.props.type === RestorePointAPI.TYPE_AUTOMATIC && (
-                        <div>
-                            <FormattedMessage
-                                defaultMessage="Autosave"
-                                description="Indicates that a restore point was created automatically"
-                                id="tw.restorePoints.autosave"
-                            />
-                        </div>
-                    )}
                 </div>
 
                 <button
@@ -127,7 +127,6 @@ RestorePoint.propTypes = {
     id: PropTypes.number.isRequired,
     title: PropTypes.string.isRequired,
     created: PropTypes.number.isRequired,
-    type: PropTypes.oneOf([RestorePointAPI.TYPE_AUTOMATIC, RestorePointAPI.TYPE_MANUAL]).isRequired,
     projectSize: PropTypes.number.isRequired,
     thumbnailSize: PropTypes.number.isRequired,
     thumbnailWidth: PropTypes.number.isRequired,
