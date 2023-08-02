@@ -67,21 +67,6 @@ const RestorePointModal = props => (
                             id="tw.restorePoints.empty"
                         />
                     </div>
-
-                    <div className={styles.legacyTransition}>
-                        {/* This is going away within a few days */}
-                        {/* No reason to bother translating */}
-                        <span>
-                            {/* eslint-disable-next-line max-len */}
-                            {'We just rewrote restore points from the ground up. If you were expecting to find a project here, try loading the old restore point:'}
-                        </span>
-                        <button
-                            className={classNames(styles.button, styles.loadLegacyButton)}
-                            onClick={props.onClickLoadLegacy}
-                        >
-                            {'Load'}
-                        </button>
-                    </div>
                 </div>
             ) : (
                 <div>
@@ -111,6 +96,21 @@ const RestorePointModal = props => (
                     </div>
                 </div>
             )}
+
+            <div className={styles.legacyTransition}>
+                {/* This is going away within a few days */}
+                {/* No reason to bother translating */}
+                <span>
+                    {/* eslint-disable-next-line max-len */}
+                    {'We just rewrote restore points from the ground up. If you can\'t find your project in the list, try loading the old restore point:'}
+                </span>
+                <button
+                    className={classNames(styles.button, styles.loadLegacyButton)}
+                    onClick={props.onClickLoadLegacy}
+                >
+                    {'Load'}
+                </button>
+            </div>
         </div>
     </Modal>
 );
