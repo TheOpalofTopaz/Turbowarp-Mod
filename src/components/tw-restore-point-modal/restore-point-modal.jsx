@@ -34,6 +34,18 @@ const RestorePointModal = props => (
                 />
             </p>
 
+            {props.disabled && (
+                <p className={styles.disabled}>
+                    <FormattedMessage
+                        // eslint-disable-next-line max-len
+                        defaultMessage="Disable the &quot;Disable restore points&quot; addon to re-enable restore point creation."
+                        // eslint-disable-next-line max-len
+                        description="Message that appears in restore point manager when the user has disabled restore points. Note that the name of the addon in the addon settings is currently hardcoded as English."
+                        id="tw.restorePoints.disabled"
+                    />
+                </p>
+            )}
+
             {props.error ? (
                 <div className={styles.error}>
                     <p>
@@ -123,6 +135,7 @@ RestorePointModal.propTypes = {
     onClickDeleteAll: PropTypes.func.isRequired,
     onClickLoad: PropTypes.func.isRequired,
     onClickLoadLegacy: PropTypes.func.isRequired,
+    disabled: PropTypes.bool.isRequired,
     isLoading: PropTypes.bool.isRequired,
     restorePoints: PropTypes.arrayOf(PropTypes.shape({})),
     error: PropTypes.string

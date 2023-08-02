@@ -17,6 +17,7 @@
 }
 
 .button-container,
+.disabled,
 .loading,
 .error,
 .empty,
@@ -38,7 +39,6 @@
     font-weight: 600;
     font-size: 0.85rem;
     color: $ui-white;
-    background: $motion-primary;
 }
 .button:disabled {
     opacity: 0.8;
@@ -102,6 +102,14 @@
 }
 .delete-button:hover {
     background-color: $ui-black-transparent;
+}
+
+.disabled {
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    background-color: rgba(255, 0, 0, 0.18);
+    border: 2px solid rgba(255, 0, 0, 0.568);
+    font-weight: bold;
 }
 
 .legacy-transition {

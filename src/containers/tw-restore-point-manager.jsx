@@ -10,6 +10,7 @@ import {setFileHandle} from '../reducers/tw';
 import TWRestorePointModal from '../components/tw-restore-point-modal/restore-point-modal.jsx';
 import RestorePointAPI from '../lib/tw-restore-point-api';
 import log from '../lib/log';
+import AddonHooks from '../addons/hooks';
 
 /* eslint-disable no-alert */
 
@@ -94,6 +95,10 @@ class TWRestorePointManager extends React.Component {
 
     shouldBeAutosaving () {
         return this.props.projectChanged && this.props.isShowingProject;
+    }
+
+    isDisabled () {
+        return AddonHooks.disableRestorePoints;
     }
 
     handleClickCreate () {
@@ -208,6 +213,10 @@ class TWRestorePointManager extends React.Component {
     }
 
     createRestorePoint (type) {
+        if (this.isDisabled()) {
+            return Promise.reject(new Error('Disabled'));
+        }
+
         if (this.props.isModalVisible) {
             this.setState({
                 loading: true
@@ -269,6 +278,7 @@ class TWRestorePointManager extends React.Component {
                     onClickDeleteAll={this.handleClickDeleteAll}
                     onClickLoad={this.handleClickLoad}
                     onClickLoadLegacy={this.handleClickLoadLegacy}
+                    disabled={this.isDisabled()}
                     isLoading={this.state.loading}
                     restorePoints={this.state.restorePoints}
                     error={this.state.error}
