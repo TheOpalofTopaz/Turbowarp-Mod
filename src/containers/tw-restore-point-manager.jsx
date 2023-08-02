@@ -50,6 +50,7 @@ class TWRestorePointManager extends React.Component {
         ]);
         this.state = {
             loading: true,
+            totalSize: 0,
             restorePoints: [],
             error: null
         };
@@ -250,10 +251,11 @@ class TWRestorePointManager extends React.Component {
             restorePoints: []
         });
         RestorePointAPI.getAllRestorePoints()
-            .then(restorePoints => {
+            .then(data => {
                 this.setState({
                     loading: false,
-                    restorePoints
+                    totalSize: data.totalSize,
+                    restorePoints: data.restorePoints
                 });
             })
             .catch(error => {
@@ -280,6 +282,7 @@ class TWRestorePointManager extends React.Component {
                     onClickLoadLegacy={this.handleClickLoadLegacy}
                     disabled={this.isDisabled()}
                     isLoading={this.state.loading}
+                    totalSize={this.state.totalSize}
                     restorePoints={this.state.restorePoints}
                     error={this.state.error}
                 />

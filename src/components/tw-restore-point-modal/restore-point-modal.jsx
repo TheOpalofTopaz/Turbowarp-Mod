@@ -6,6 +6,7 @@ import RestorePoint from './restore-point.jsx';
 import styles from './restore-point-modal.css';
 import classNames from 'classnames';
 import {APP_NAME} from '../../lib/brand';
+import {formatBytes} from '../../lib/tw-bytes-utils';
 
 const messages = defineMessages({
     title: {
@@ -93,7 +94,18 @@ const RestorePointModal = props => (
                         ))}
                     </div>
 
-                    <div className={styles.buttonContainer}>
+                    <div className={styles.extraContainer}>
+                        <div className={styles.totalSize}>
+                            <FormattedMessage
+                                defaultMessage="Estimated storage used: {size}"
+                                description="Part of restore point modal describing amount of disk space used"
+                                id="tw.restorePoints.size"
+                                values={{
+                                    size: formatBytes(props.totalSize)
+                                }}
+                            />
+                        </div>
+
                         <button
                             onClick={props.onClickDeleteAll}
                             className={classNames(styles.button, styles.deleteAllButton)}
@@ -137,6 +149,7 @@ RestorePointModal.propTypes = {
     onClickLoadLegacy: PropTypes.func.isRequired,
     disabled: PropTypes.bool.isRequired,
     isLoading: PropTypes.bool.isRequired,
+    totalSize: PropTypes.number.isRequired,
     restorePoints: PropTypes.arrayOf(PropTypes.shape({})),
     error: PropTypes.string
 };

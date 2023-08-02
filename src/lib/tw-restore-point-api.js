@@ -13,10 +13,11 @@ const TYPE_MANUAL = 1;
  * @property {string} title
  * @property {number} created Unix seconds
  * @property {Type} type
- * @property {number} size in bytes
+ * @property {number} projectSize JSON size in bytes
+ * @property {number} thumbnailSize Thumbnail size in bytes
  * @property {number} thumbnailWidth
  * @property {number} thumbnailHeight
- * @property {string[]} assets md5exts
+ * @property {Record<string, number>} assets maps md5exts to size in bytes
  */
 
 const DATABASE_NAME = 'TW_RestorePoints';
@@ -78,13 +79,24 @@ const parseMetadata = obj => {
     if (!obj || typeof obj !== 'object') {
         obj = {};
     }
+
     obj.title = typeof obj.title === 'string' ? obj.title : '?';
     obj.created = typeof obj.created === 'number' ? obj.created : 0;
     obj.type = [TYPE_AUTOMATIC, TYPE_MANUAL].includes(obj.type) ? obj.type : 1;
-    obj.assets = Array.isArray(obj.assets) ? obj.assets : [];
-    obj.assets = obj.assets.filter(i => typeof i === 'string');
+
+    obj.thumbnailSize = typeof obj.thumbnailSize === 'number' ? obj.thumbnailSize : 0;
+    obj.projectSize = typeof obj.projectSize === 'number' ? obj.projectSize : 0;
+
     obj.thumbnailWidth = typeof obj.thumbnailWidth === 'number' ? obj.thumbnailWidth : 480;
     obj.thumbnailHeight = typeof obj.thumbnailHeight === 'number' ? obj.thumbnailHeight : 360;
+
+    obj.assets = (obj.assets && typeof obj.assets === 'object') ? obj.assets : {};
+    for (const [asestId, size] of Object.entries(obj.assets)) {
+        if (typeof size !== 'number') {
+            delete obj.assets[asestId];
+        }
+    }
+
     return obj;
 };
 
@@ -132,7 +144,7 @@ const removeExtraneousData = transaction => new Promise(resolve => {
         if (cursor) {
             requiredProjects.add(cursor.key);
             const metadata = parseMetadata(cursor.value);
-            for (const assetId of metadata.assets) {
+            for (const assetId of Object.keys(metadata.assets)) {
                 requiredAssetIDs.add(assetId);
             }
             cursor.continue();
@@ -210,9 +222,8 @@ const createRestorePoint = (
 ) => openDB().then(db => new Promise((resolveTransaction, rejectTransaction) => {
     /** @type {Record<string, Uint8Array>} */
     const projectFiles = vm.saveProjectSb3DontZip();
-    const projectAssetIDs = Object.keys(projectFiles)
-        .filter(i => i !== 'project.json');
-
+    const jsonData = projectFiles['project.json'];
+    const projectAssetIDs = Object.keys(projectFiles).filter(i => i !== 'project.json');
     if (projectAssetIDs.length === 0) {
         throw new Error('There are no assets in this project');
     }
@@ -240,8 +251,8 @@ const createRestorePoint = (
             for (const assetId of missingAssets) {
                 await new Promise(resolveAsset => {
                     // TODO: should we insert arraybuffer or uint8array?
-                    const assetDataArray = projectFiles[assetId];
-                    const request = assetStore.add(assetDataArray, assetId);
+                    const assetData = projectFiles[assetId];
+                    const request = assetStore.add(assetData, assetId);
                     request.onsuccess = () => {
                         resolveAsset();
                     };
@@ -262,7 +273,6 @@ const createRestorePoint = (
         };
 
         const writeProjectJSON = () => {
-            const jsonData = projectFiles['project.json'];
             const projectStore = transaction.objectStore(PROJECT_STORE);
             const request = projectStore.add(jsonData, generatedId);
             request.onsuccess = () => {
@@ -271,21 +281,22 @@ const createRestorePoint = (
         };
 
         const writeMetadata = () => {
-            let size = 0;
-            for (const data of Object.values(projectFiles)) {
-                size += data.byteLength;
+            const assetSizeData = {};
+            for (const assetId of projectAssetIDs) {
+                const assetData = projectFiles[assetId];
+                assetSizeData[assetId] = assetData.byteLength;
             }
-            size += thumbnailData.data.byteLength;
 
             /** @type {Metadata} */
             const metadata = {
                 title,
                 created: Math.round(Date.now() / 1000),
                 type,
-                size,
+                projectSize: jsonData.byteLength,
+                thumbnailSize: thumbnailData.data.byteLength,
                 thumbnailWidth: vm.runtime.stageWidth,
                 thumbnailHeight: vm.runtime.stageHeight,
-                assets: projectAssetIDs
+                assets: assetSizeData
             };
 
             const metadataStore = transaction.objectStore(METADATA_STORE);
@@ -367,7 +378,7 @@ const loadRestorePoint = id => openDB().then(db => new Promise((resolveTransacti
 
     const loadAssets = async () => {
         const assetStore = transaction.objectStore(ASSET_STORE);
-        for (const assetId of metadata.assets) {
+        for (const assetId of Object.keys(metadata.assets)) {
             await new Promise(resolve => {
                 const request = assetStore.get(assetId);
                 request.onsuccess = () => {
@@ -404,7 +415,7 @@ const loadRestorePoint = id => openDB().then(db => new Promise((resolveTransacti
 
 // eslint-disable-next-line valid-jsdoc
 /**
- * @returns {Promise<Array<Metadata & {id: number}>>} List of restore points sorted newest first.
+ * @returns {Promise<{totalSize: number; restorePoints: Array<Manifest & {id: number}>}>} Restore point information.
  */
 const getAllRestorePoints = () => openDB().then(db => new Promise((resolve, reject) => {
     const transaction = db.transaction([METADATA_STORE], 'readonly');
@@ -414,6 +425,9 @@ const getAllRestorePoints = () => openDB().then(db => new Promise((resolve, reje
 
     /** @type {Metadata[]} */
     const restorePoints = [];
+    /** @type {Set<string>} */
+    const countedAssets = new Set();
+    let totalSize = 0;
 
     const metadataStore = transaction.objectStore(METADATA_STORE);
     const request = metadataStore.openCursor(null, 'prev');
@@ -424,9 +438,21 @@ const getAllRestorePoints = () => openDB().then(db => new Promise((resolve, reje
             parsed.id = cursor.key;
             restorePoints.push(parsed);
 
+            totalSize += parsed.projectSize;
+            totalSize += parsed.thumbnailSize;
+            for (const [assetId, assetSize] of Object.entries(parsed.assets)) {
+                if (!countedAssets.has(assetId)) {
+                    countedAssets.add(assetId);
+                    totalSize += assetSize;
+                }
+            }
+
             cursor.continue();
         } else {
-            resolve(restorePoints);
+            resolve({
+                totalSize,
+                restorePoints
+            });
         }
     };
 }));

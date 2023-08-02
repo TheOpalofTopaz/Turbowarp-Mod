@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {FormattedMessage, FormattedDate, FormattedTime} from 'react-intl';
 import bindAll from 'lodash.bindall';
 import styles from './restore-point-modal.css';
+import {formatBytes} from '../../lib/tw-bytes-utils';
 import RestorePointAPI from '../../lib/tw-restore-point-api';
 
 class RestorePoint extends React.Component {
@@ -16,6 +17,9 @@ class RestorePoint extends React.Component {
             thumbnail: null
         };
         this.unmounted = false;
+
+        // should never change for the same restore point
+        this.totalSize = this.getTotalSize();
     }
 
     componentDidMount () {
@@ -38,6 +42,14 @@ class RestorePoint extends React.Component {
         this.unmounted = true;
     }
 
+    getTotalSize () {
+        let size = this.props.projectSize + this.props.thumbnailSize;
+        for (const assetSize of Object.values(this.props.assets)) {
+            size += assetSize;
+        }
+        return size;
+    }
+
     handleClickDelete (e) {
         e.stopPropagation();
         this.props.onClickDelete(this.props.id);
@@ -45,14 +57,6 @@ class RestorePoint extends React.Component {
 
     handleClickLoad () {
         this.props.onClickLoad(this.props.id);
-    }
-
-    formatSize () {
-        const size = this.props.size;
-        if (size < 1000 * 1000) {
-            return `${(size / 1000).toFixed(2)}KB`;
-        }
-        return `${(size / 1000 / 1000).toFixed(2)}MB`;
     }
 
     render () {
@@ -84,7 +88,7 @@ class RestorePoint extends React.Component {
                     </div>
 
                     <div>
-                        {this.formatSize()}
+                        {formatBytes(this.totalSize)}
                         {', '}
                         <FormattedMessage
                             defaultMessage="{n} assets"
@@ -92,7 +96,7 @@ class RestorePoint extends React.Component {
                             description="Describes how many assets (costumes and images) are in a restore poins. {n} is replaced with a number like 406"
                             id="tw.restorePoints.assets"
                             values={{
-                                n: this.props.assets.length
+                                n: Object.keys(this.props.assets).length
                             }}
                         />
                     </div>
@@ -124,10 +128,11 @@ RestorePoint.propTypes = {
     title: PropTypes.string.isRequired,
     created: PropTypes.number.isRequired,
     type: PropTypes.oneOf([RestorePointAPI.TYPE_AUTOMATIC, RestorePointAPI.TYPE_MANUAL]).isRequired,
-    size: PropTypes.number.isRequired,
+    projectSize: PropTypes.number.isRequired,
+    thumbnailSize: PropTypes.number.isRequired,
     thumbnailWidth: PropTypes.number.isRequired,
     thumbnailHeight: PropTypes.number.isRequired,
-    assets: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
+    assets: PropTypes.shape({}).isRequired, // Record<string, number>
     onClickDelete: PropTypes.func.isRequired,
     onClickLoad: PropTypes.func.isRequired
 };
