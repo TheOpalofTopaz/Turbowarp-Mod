@@ -150,6 +150,9 @@ class TWRestorePointManager extends React.Component {
     }
 
     _finishLoading (success) {
+        setTimeout(() => {
+            this.props.vm.renderer.draw();
+        });
         this.props.onFinishLoadingRestorePoint(success, this.props.loadingState);
     }
 
@@ -305,7 +308,10 @@ TWRestorePointManager.propTypes = {
     isShowingProject: PropTypes.bool.isRequired,
     isModalVisible: PropTypes.bool.isRequired,
     vm: PropTypes.shape({
-        loadProject: PropTypes.func.isRequired
+        loadProject: PropTypes.func.isRequired,
+        renderer: PropTypes.shape({
+            draw: PropTypes.func.isRequired
+        }).isRequired
     }).isRequired
 };
 
