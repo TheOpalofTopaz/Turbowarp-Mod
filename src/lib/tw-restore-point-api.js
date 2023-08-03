@@ -194,7 +194,14 @@ const removeExtraneousRestorePoints = () => openDB().then(db => new Promise((res
  * @returns {Promise<{type: string; data: ArrayBuffer;}>} Thumbnail data
  */
 const generateThumbnail = vm => new Promise(resolve => {
+    // Piggyback off of the next draw if we can, otherwise just force it to render
+    const drawTimeout = setTimeout(() => {
+        vm.renderer.draw();
+    }, 100);
+
     vm.renderer.requestSnapshot(dataURL => {
+        clearTimeout(drawTimeout);
+
         const index = dataURL.indexOf(',');
         const base64 = dataURL.substring(index + 1);
         const arrayBuffer = base64ToArrayBuffer(base64);
@@ -204,9 +211,6 @@ const generateThumbnail = vm => new Promise(resolve => {
             data: arrayBuffer
         });
     });
-
-    // Force the snapshot to be processed immediately, even if the project is not running yet.
-    vm.renderer.draw();
 });
 
 /**
@@ -356,10 +360,11 @@ const deleteAllRestorePoints = () => openDB().then(db => new Promise((resolveTra
 }));
 
 /**
+ * @param {VirtualMachine} vm scratch-vm instance
  * @param {number} id the restore point's ID
  * @returns {Promise<ArrayBuffer>} Resolves with sb3 file
  */
-const loadRestorePoint = id => openDB().then(db => new Promise((resolveTransaction, rejectTransaction) => {
+const loadRestorePoint = (vm, id) => openDB().then(db => new Promise((resolveTransaction, rejectTransaction) => {
     const transaction = db.transaction([METADATA_STORE, PROJECT_STORE, ASSET_STORE], 'readonly');
     transaction.onerror = () => {
         rejectTransaction(new Error(`Transaction error: ${transaction.error}`));
@@ -369,11 +374,22 @@ const loadRestorePoint = id => openDB().then(db => new Promise((resolveTransacti
     /** @type {Metadata} */
     let metadata;
 
-    const generate = () => {
-        resolveTransaction(zip.generateAsync({
-            // Don't bother compressing it since it will be immediately decompressed
-            type: 'arraybuffer'
-        }));
+    // TODO: we should be able to use a custom scratch-storage helper to avoid putting the
+    // zip in memory.
+
+    const loadVM = () => {
+        resolveTransaction(
+            zip.generateAsync({
+                // Don't bother compressing it since it will be immediately decompressed
+                type: 'arraybuffer'
+            })
+                .then(sb3 => vm.loadProject(sb3))
+                .then(() => {
+                    setTimeout(() => {
+                        vm.renderer.draw();
+                    });
+                })
+        );
     };
 
     const loadAssets = async () => {
@@ -389,7 +405,7 @@ const loadRestorePoint = id => openDB().then(db => new Promise((resolveTransacti
             });
         }
 
-        generate();
+        loadVM();
     };
 
     const loadProjectJSON = () => {
@@ -409,6 +425,8 @@ const loadRestorePoint = id => openDB().then(db => new Promise((resolveTransacti
             loadProjectJSON();
         };
     };
+
+    vm.stop();
 
     loadMetadata();
 }));

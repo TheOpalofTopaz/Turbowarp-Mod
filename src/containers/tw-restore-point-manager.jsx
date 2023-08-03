@@ -172,8 +172,7 @@ class TWRestorePointManager extends React.Component {
             return;
         }
         this._startLoading();
-        RestorePointAPI.loadRestorePoint(id)
-            .then(buffer => this.props.vm.loadProject(buffer))
+        RestorePointAPI.loadRestorePoint(this.props.vm, id)
             .then(() => {
                 this._finishLoading(true);
             })
