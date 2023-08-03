@@ -35,6 +35,11 @@ const messages = defineMessages({
         defaultMessage: 'Are you sure you want to delete ALL restore points? This cannot be undone.',
         description: 'Confirmation that appears when deleting ALL restore points.',
         id: 'tw.restorePoints.confirmDeleteAll'
+    },
+    loadError: {
+        defaultMessage: 'Error loading restore point: {error}',
+        description: 'Error message when a restore point could not be loaded',
+        id: 'tw.restorePoints.error'
     }
 });
 
@@ -177,8 +182,7 @@ class TWRestorePointManager extends React.Component {
                 this._finishLoading(true);
             })
             .catch(error => {
-                this.handleModalError(error);
-                this._finishLoading(false);
+                this.handleLoadError(error);
             });
     }
 
@@ -187,16 +191,26 @@ class TWRestorePointManager extends React.Component {
             return;
         }
         this._startLoading();
+        this.props.vm.stop();
         RestorePointAPI.loadLegacyRestorePoint()
             .then(buffer => this.props.vm.loadProject(buffer))
             .then(() => {
+                setTimeout(() => {
+                    this.props.vm.renderer.draw();
+                });
                 this._finishLoading(true);
             })
             .catch(error => {
-                // Don't handleError on this because we're expecting error 90% of the time
-                alert(error);
-                this._finishLoading(false);
+                this.handleLoadError(error);
             });
+    }
+
+    handleLoadError (error) {
+        log.error(error);
+        alert(this.props.intl.formatMessage(messages.loadError, {
+            error
+        }));
+        this._finishLoading(false);
     }
 
     queueRestorePoint () {
@@ -206,9 +220,7 @@ class TWRestorePointManager extends React.Component {
         this.timeout = setTimeout(() => {
             this.createRestorePoint(RestorePointAPI.TYPE_AUTOMATIC).then(() => {
                 this.timeout = null;
-
                 if (this.shouldBeAutosaving()) {
-                    // Project is still not saved
                     this.queueRestorePoint();
                 }
             });
@@ -238,11 +250,17 @@ class TWRestorePointManager extends React.Component {
             sleep(MINIMUM_SAVE_TIME)
         ])
             .then(() => {
+                this.props.onFinishCreatingRestorePoint();
                 if (this.props.isModalVisible) {
                     this.refreshState();
                 }
-
-                this.props.onFinishCreatingRestorePoint();
+            })
+            .catch(error => {
+                log.error(error);
+                this.props.onErrorCreatingRestorePoint();
+                if (this.props.isModalVisible) {
+                    this.refreshState();
+                }
             });
     }
 
@@ -268,7 +286,8 @@ class TWRestorePointManager extends React.Component {
     handleModalError (error) {
         log.error('Restore point error', error);
         this.setState({
-            error: `${error}`
+            error: `${error}`,
+            loading: false
         });
     }
 
@@ -300,6 +319,7 @@ TWRestorePointManager.propTypes = {
     projectTitle: PropTypes.string.isRequired,
     onStartCreatingRestorePoint: PropTypes.func.isRequired,
     onFinishCreatingRestorePoint: PropTypes.func.isRequired,
+    onErrorCreatingRestorePoint: PropTypes.func.isRequired,
     onStartLoadingRestorePoint: PropTypes.func.isRequired,
     onFinishLoadingRestorePoint: PropTypes.func.isRequired,
     onCloseModal: PropTypes.func.isRequired,
@@ -308,6 +328,7 @@ TWRestorePointManager.propTypes = {
     isModalVisible: PropTypes.bool.isRequired,
     vm: PropTypes.shape({
         loadProject: PropTypes.func.isRequired,
+        stop: PropTypes.func.isRequired,
         renderer: PropTypes.shape({
             draw: PropTypes.func.isRequired
         }).isRequired
@@ -326,6 +347,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     onStartCreatingRestorePoint: () => dispatch(showStandardAlert('twCreatingRestorePoint')),
     onFinishCreatingRestorePoint: () => showAlertWithTimeout(dispatch, 'twRestorePointSuccess'),
+    onErrorCreatingRestorePoint: () => showAlertWithTimeout(dispatch, 'twRestorePointError'),
     onStartLoadingRestorePoint: loadingState => {
         dispatch(openLoadingProject());
         dispatch(requestProjectUpload(loadingState));

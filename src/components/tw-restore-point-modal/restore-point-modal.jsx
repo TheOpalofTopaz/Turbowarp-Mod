@@ -51,8 +51,9 @@ const RestorePointModal = props => (
                 <div className={styles.error}>
                     <p>
                         <FormattedMessage
-                            defaultMessage="Restore points are disabled because an error was encountered:"
-                            description="Error message in restore point manager"
+                            defaultMessage="Restore points are not available due to an error:"
+                            // eslint-disable-next-line max-len
+                            description="Error message in restore point manager when the list of restore points cannot be loaded. Followed by an error message."
                             id="tw.restorePoints.error"
                             values={{
                                 error: props.error
@@ -121,7 +122,7 @@ const RestorePointModal = props => (
                 </div>
             )}
 
-            {!props.error && !props.isLoading && (
+            {!props.isLoading && (
                 <div className={styles.legacyTransition}>
                     {/* This is going away within a few days */}
                     {/* No reason to bother translating */}

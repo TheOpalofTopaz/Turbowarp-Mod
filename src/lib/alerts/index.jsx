@@ -187,10 +187,11 @@ const alerts = [
     {
         alertId: 'twCreatingRestorePoint',
         alertType: AlertTypes.INLINE,
+        clearList: ['twRestorePointSuccess', 'twRestorePointError'],
         content: (
             <FormattedMessage
                 defaultMessage="Creating restore point…"
-                description="Message indicating that a restore point is being automatically created"
+                description="Menu bar message indicating that a restore point is being automatically created"
                 id="tw.alerts.creatingRestorePoint"
             />
         ),
@@ -205,13 +206,29 @@ const alerts = [
             <FormattedMessage
                 defaultMessage="Access restore points in &quot;File&quot;"
                 // eslint-disable-next-line max-len
-                description="Message indicating that a restore point was successfully created. File refers to the file dropdown menu."
+                description="Menu bar message indicating that a restore point was successfully created. File refers to the file dropdown menu."
                 id="tw.alerts.restorePointSuccess"
             />
         ),
         iconURL: successImage,
         level: AlertLevels.SUCCESS,
         maxDisplaySecs: 3
+    },
+    {
+        alertId: 'twRestorePointError',
+        alertType: AlertTypes.INLINE,
+        clearList: ['twCreatingRestorePoint'],
+        content: (
+            <FormattedMessage
+                defaultMessage="Could not create restore point"
+                // eslint-disable-next-line max-len
+                description="Menu bar message indicating that a restore point could not be created."
+                id="tw.alerts.restorePointError"
+            />
+        ),
+        iconURL: successImage,
+        level: AlertLevels.WARN,
+        maxDisplaySecs: 5
     },
     {
         alertId: 'cloudInfo',
