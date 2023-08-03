@@ -14,7 +14,7 @@ import AddonHooks from '../addons/hooks';
 
 /* eslint-disable no-alert */
 
-const AUTOMATIC_INTERVAL = 1000 * 5; // TODO: increase this when testing is done
+const AUTOMATIC_INTERVAL = 1000 * 60 * 5;
 const SAVE_DELAY = 250;
 const MINIMUM_SAVE_TIME = 750;
 
