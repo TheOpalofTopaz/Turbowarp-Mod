@@ -331,7 +331,7 @@ TWRestorePointManager.propTypes = {
         stop: PropTypes.func.isRequired,
         renderer: PropTypes.shape({
             draw: PropTypes.func.isRequired
-        }).isRequired
+        })
     }).isRequired
 };
 
