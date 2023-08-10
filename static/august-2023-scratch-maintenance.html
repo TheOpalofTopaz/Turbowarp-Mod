@@ -1,42 +1,133 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
-    <meta charset="utf8">
-    <title>August 2023 Scratch Maintenance - TurboWarp</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zip docs</title>
     <style>
-      body {
-        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-        margin: 0;
-        border-top: 4px solid #ff4c4c;
-        padding: 0 4px;
-      }
-      main {
+      .inbox {
+        text-align: left;
+        display: inline-block;
+        background-color: #ffffff;
         max-width: 600px;
-        margin: auto;
+        width: 100%;
+        border: 1px solid #e2e2e2;
+        border-radius: 5px;
+        margin: 30px 0 60px 0;
+        padding: 10px 15px 15px 15px;
+        overflow: hidden;
       }
+
+      body {
+        background-color: #f2f2f2;
+        text-align: center;
+        margin: 0;
+        padding: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        transition: all 100ms ease-out;
+        line-height: 1.3;
+      }
+
+      .title {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .uppertext {
+        display: flex;
+        justify-content: center;
+        background-color:
+          /*#4d97ff;*/
+          #ff4d4d;
+        min-height: 150px;
+        text-align: center;
+        width: 100%;
+        font-weight: bold;
+        color: white;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      .box {
+        background-color: #eeeeee;
+        padding: 0 0.2em;
+        border-radius: 3px;
+        color: #222222;
+      }
+
+      .code {
+        background-color: #f0f0f0;
+        border-radius: 3px;
+        resize: none;
+        width: 100%;
+      }
+
+      .imgBox {
+        width: 100%;
+        overflow: auto;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      img {
+        max-width: 100%;
+        vertical-align: middle;
+      }
+
+      h1 {
+        font-size: 45px;
+      }
+
+      h2,
+      h3 {
+        margin-top: 1em;
+        padding-top: 1em;
+        border-top: solid 1px #bbb;
+      }
+
+      h2 {
+        border-color: #777;
+        border-width: 2px;
+      }
+
+      .heading-link {
+        font-size: 13px;
+        opacity: 0;
+        transition: 0.25s;
+      }
+
+      h2:hover .heading-link,
+      h3:hover .heading-link {
+        opacity: 1;
+      }
+
       .quote {
         padding: 12px 20px;
         border: 1px solid #ccc;
         background-color: #f7f7f7;
       }
+
       .quote p {
         font-weight: bold;
         margin: 0;
       }
+
       .quote ul {
         margin: 0.5rem 0 0 0;
         padding: 0 0 0 1.2rem;
       }
-      h2 {
-        font-size: 1.2em;
-      }
     </style>
   </head>
-
   <body>
-    <main>
-      <h1>August 2023 Scratch Maintenance</h1>
+    <div class="uppertext">
+      <h1 class="title">August 2023 Scratch Maintenance</h1>
+    </div>
+    <div class="inbox">
       <p>The Scratch Team <a href="https://scratch.mit.edu/discuss/topic/702112/">announced</a> that Scratch may be temporarily down for maintenance in the near future:</p>
       <div class="quote">
         <p>ScratchCat wrote:</p>
@@ -46,26 +137,30 @@
           <li>August 25, 8 PM ET - August 27, 1159 ET: The Backpack tool, Cloud Data, and thumbnail updates will be temporarily unavailable during portions of the weekend. The rest of the site should be working normally during this time.</li>
         </ul>
       </div>
-
-      <p>Parts of this maintenance will impact TurboWarp and other tools that use the Scratch API. <s>We're assuming this maintenance is mostly internal stuff and that there won't be significant outwards changes.</s></p>
-
+      <p>Parts of this maintenance will impact TurboWarp and other tools that use the Scratch API. <i><s>We're assuming this maintenance is mostly internal stuff and that there won't be significant outwards changes.</s></i></p>
       <!-- https://crt.sh/?q=scratch.org -->
-      <p><b>Update:</b> Based on public logs, we believe Scratch might move some of the API from scratch.mit.edu to scratch.org during this maintenance. We are already preparing for this, but it could result in parts of TurboWarp being unavailable for longer than originally anticipated.</p>
-
-      <h2>What won't be affected</h2>
-      <p>All of the TurboWarp websites will be up. You will still be able to load projects saved to your computer using the <a href="https://turbowarp.org/editor">website</a>, <a href="https://desktop.turbowarp.org/">desktop app</a>, or <a href="https://forkphorus.github.io/">packager</a>. Packaged projects will still load. TurboWarp's backpack and restore points will be unaffected. Our cloud variable server should still work, and almost all custom extensions will not be affected.</p>
-
-      <h2>August 11 at 8 PM ET &ndash; August 13 at 11:59 PM ET</h2>
-      <p>Loading projects from the Scratch website <b>may not</b> work. (Forum post is a bit vague)</p>
-
-      <h2>August 18 at 8 PM ET &ndash; August 20 at 11:59 PM ET</h2>
-      <p>Loading projects from the Scratch website <b>may not</b> work anywhere. Translate blocks, text-to-speech blocks, and extensions that use the Scratch API <b>may not</b> work in any project. (We cache translate requests, so some common translations may still work)</p>
-
-      <h2>August 25 at 8 PM ET &ndash; August 27 at 11:59 PM ET</h2>
+      <p>
+        <b>Update:</b> Based on public logs, we believe Scratch might move some of the API from scratch.mit.edu to scratch.org during this maintenance. We are already preparing for this, but it could result in parts of TurboWarp being unavailable for longer than originally anticipated.
+      </p>
+      <h2 id="notaffected"> What won't be affected <span class="heading-link">( <a href="#notaffected">link</a>) </span>
+      </h2>
+      <p>All of the TurboWarp websites will be up. You will still be able to load projects saved to your computer using the <a href="https://turbowarp.org/editor">website</a>, <a href="https://desktop.turbowarp.org/">desktop app</a>, or <a href="https://forkphorus.github.io/">packager</a>. Packaged projects will still load. TurboWarp's backpack and restore points will be unaffected. Our cloud variable server should still work, and almost all custom extensions will not be affected. </p>
+      <h2 id="schedule"> What <i>may</i> be affected <span class="heading-link">( <a href="#schedule">link</a>) </span>
+      </h2>
+      <h3>August 11 at 8 PM ET &ndash; August 13 at 11:59 PM ET</h3>
+      <p>Loading projects from the Scratch website <b>may not</b> work. (Forum post is a bit vague) </p>
+      <h3>August 18 at 8 PM ET &ndash; August 20 at 11:59 PM ET</h3>
+      <p>Loading projects from the Scratch website <b>may not</b> work anywhere. Translate blocks, text-to-speech blocks, and extensions that use the Scratch API <b>may not</b> work in any project. (We cache translate requests, so some common translations may still work) </p>
+      <h3>August 25 at 8 PM ET &ndash; August 27 at 11:59 PM ET</h3>
       <p>No effect anticipated.</p>
-
-      <h2>If Scratch does make significant changes</h2>
+      <h3>If Scratch does make significant changes</h3>
       <p>It will take a bit longer, but we will get everything working again shortly.</p>
-    </main>
-  </body>
+      <p> Blocks for creating and saving the current archive. Only one archive can be open at a time. </p>undefined
+    </div>undefined<footer>
+      <p>TurboWarp is not affiliated with Scratch, the Scratch Team, or the Scratch Foundation.</p>
+      <p>
+        <a href="https://turbowarp.org">Back to Home Page
+      </p>
+    </footer>undefined
+  </body>undefined
 </html>
