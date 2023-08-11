@@ -96,15 +96,13 @@ class TWRestorePointManager extends React.Component {
                 this.queueRestorePoint();
             } else {
                 // Project was saved
-                clearTimeout(this.timeout);
-                this.timeout = null;
+                this.cancelQueuedRestorePoint();
             }
         }
     }
 
     componentWillUnmount () {
-        clearTimeout(this.timeout);
-        this.timeout = null;
+        this.cancelQueuedRestorePoint();
     }
 
     shouldBeAutosaving () {
@@ -236,6 +234,13 @@ class TWRestorePointManager extends React.Component {
                 }
             });
         }, AUTOMATIC_INTERVAL);
+    }
+
+    cancelQueuedRestorePoint () {
+        if (this.timeout) {
+            clearTimeout(this.timeout);
+            this.timeout = null;
+        }
     }
 
     createRestorePoint (type) {
