@@ -6,10 +6,7 @@ class LocalStorageShim {
         this.storage = Object.create(null);
     }
     getItem (key) {
-        if (key in this.storage) {
-            return this.storage[key];
-        }
-        return null;
+        return this.storage[key];
     }
     setItem (key, value) {
         this.storage[key] = value.toString();
