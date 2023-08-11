@@ -235,7 +235,6 @@ class TWRestorePointManager extends React.Component {
         if (this.timeout || this.state.interval < 0) {
             return;
         }
-        console.log('Creating in', this.state.interval);
         this.timeout = setTimeout(() => {
             this.createRestorePoint(RestorePointAPI.TYPE_AUTOMATIC).then(() => {
                 this.timeout = null;
@@ -246,7 +245,6 @@ class TWRestorePointManager extends React.Component {
 
     cancelQueuedRestorePoint () {
         if (this.timeout) {
-            console.log('Cancelled');
             clearTimeout(this.timeout);
             this.timeout = null;
         }
