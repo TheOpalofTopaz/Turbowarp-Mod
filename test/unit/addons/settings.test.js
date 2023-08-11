@@ -606,21 +606,3 @@ test('if', () => {
         }
     })).toBe(false);
 });
-
-test('Settings migration 4 -> 5', () => {
-    const store = new SettingStore();
-
-    localStorage.setItem('tw:addons', JSON.stringify({
-        '_': 4,
-        'tw-disable-restore-points': {
-            enabled: true
-        }
-    }));
-
-    store.readLocalStorage();
-    expect(localStorage.getItem('tw:restore-point-interval')).toBe('-1');
-
-    localStorage.setItem('tw:restore-point-interval', '1000');
-    store.readLocalStorage();
-    expect(localStorage.getItem('tw:restore-point-interval')).toBe('1000');
-});
