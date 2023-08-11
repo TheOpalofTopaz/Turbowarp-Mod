@@ -61,13 +61,14 @@ class TWRestorePointManager extends React.Component {
             totalSize: 0,
             restorePoints: [],
             error: null,
+            wasChanged: props.projectChanged,
             interval: RestorePointAPI.readInterval()
         };
         this.timeout = null;
     }
 
     componentDidMount () {
-        if (this.shouldBeAutosaving()) {
+        if (this.state.wasChanged) {
             this.queueRestorePoint();
         }
 
@@ -84,29 +85,28 @@ class TWRestorePointManager extends React.Component {
                 restorePoints: []
             });
         }
+
+        if (nextProps.projectChanged && !this.props.projectChanged && !this.state.wasChanged) {
+            this.setState({
+                wasChanged: true
+            });
+        }
+
+        if (!nextProps.isShowingProject && this.props.isShowingProject) {
+            this.setState({
+                wasChanged: false
+            });
+        }
     }
 
-    componentDidUpdate (prevProps) {
-        if (
-            this.props.projectChanged !== prevProps.projectChanged ||
-            this.props.isShowingProject !== prevProps.isShowingProject
-        ) {
-            if (this.shouldBeAutosaving()) {
-                // Project was modified
-                this.queueRestorePoint();
-            } else {
-                // Project was saved
-                this.cancelQueuedRestorePoint();
-            }
+    componentDidUpdate (prevProps, prevState) {
+        if (this.state.wasChanged && !prevState.wasChanged) {
+            this.queueRestorePoint();
         }
     }
 
     componentWillUnmount () {
         this.cancelQueuedRestorePoint();
-    }
-
-    shouldBeAutosaving () {
-        return this.props.projectChanged && this.props.isShowingProject;
     }
 
     handleClickCreate () {
@@ -224,7 +224,7 @@ class TWRestorePointManager extends React.Component {
         this.setState({
             interval
         }, () => {
-            if (this.shouldBeAutosaving()) {
+            if (this.state.wasChanged) {
                 this.cancelQueuedRestorePoint();
                 this.queueRestorePoint();
             }
@@ -239,9 +239,7 @@ class TWRestorePointManager extends React.Component {
         this.timeout = setTimeout(() => {
             this.createRestorePoint(RestorePointAPI.TYPE_AUTOMATIC).then(() => {
                 this.timeout = null;
-                if (this.shouldBeAutosaving()) {
-                    this.queueRestorePoint();
-                }
+                this.queueRestorePoint();
             });
         }, this.state.interval);
     }
