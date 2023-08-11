@@ -19,7 +19,7 @@ import upstreamMeta from './generated/upstream-meta.json';
 import EventTargetShim from './event-target';
 
 const SETTINGS_KEY = 'tw:addons';
-const VERSION = 4;
+const VERSION = 5;
 
 const migrateSettings = settings => {
     const oldVersion = settings._;
@@ -75,6 +75,18 @@ const migrateSettings = settings => {
                 enabled: false
             };
         }
+    }
+
+    // Migrate 4 -> 5
+    // tw-disable-restore-poitns was removed and replaced with a new local storage key.
+    if (oldVersion < 5) {
+        const disableRestorePoints = settings['tw-disable-restore-points'];
+        if (disableRestorePoints && disableRestorePoints.enabled) {
+            if (localStorage.getItem('tw:restore-point-interval') === null) {
+                localStorage.setItem('tw:restore-point-interval', -1);
+            }
+        }
+        delete settings['tw-disable-restore-points'];
     }
 
     return settings;

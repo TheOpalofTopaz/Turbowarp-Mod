@@ -6,7 +6,10 @@ class LocalStorageShim {
         this.storage = Object.create(null);
     }
     getItem (key) {
-        return this.storage[key];
+        if (key in this.storage) {
+            return this.storage[key];
+        }
+        return null;
     }
     setItem (key, value) {
         this.storage[key] = value.toString();
@@ -602,4 +605,22 @@ test('if', () => {
             'motion-color': '#000001'
         }
     })).toBe(false);
+});
+
+test('Settings migration 4 -> 5', () => {
+    const store = new SettingStore();
+
+    localStorage.setItem('tw:addons', JSON.stringify({
+        '_': 4,
+        'tw-disable-restore-points': {
+            enabled: true
+        }
+    }));
+
+    store.readLocalStorage();
+    expect(localStorage.getItem('tw:restore-point-interval')).toBe('-1');
+
+    localStorage.setItem('tw:restore-point-interval', '1000');
+    store.readLocalStorage();
+    expect(localStorage.getItem('tw:restore-point-interval')).toBe('1000');
 });
