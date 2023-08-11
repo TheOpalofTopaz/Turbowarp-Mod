@@ -102,6 +102,8 @@ class TWRestorePointManager extends React.Component {
     componentDidUpdate (prevProps, prevState) {
         if (this.state.wasChanged && !prevState.wasChanged) {
             this.queueRestorePoint();
+        } else if (!this.state.wasChanged && prevState.wasChanged) {
+            this.cancelQueuedRestorePoint();
         }
     }
 
