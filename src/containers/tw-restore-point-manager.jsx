@@ -11,6 +11,7 @@ import TWRestorePointModal from '../components/tw-restore-point-modal/restore-po
 import RestorePointAPI from '../lib/tw-restore-point-api';
 import log from '../lib/log';
 import AddonHooks from '../addons/hooks';
+import isScratchDesktop from '../lib/isScratchDesktop';
 
 /* eslint-disable no-alert */
 
@@ -19,6 +20,9 @@ const SAVE_DELAY = 250;
 const MINIMUM_SAVE_TIME = 750;
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+// TODO: remove legacy stuff completely after next desktop app update
+const shouldRemoveLegacyRestorePoint = () => !isScratchDesktop();
 
 const messages = defineMessages({
     confirmLoad: {
@@ -65,6 +69,10 @@ class TWRestorePointManager extends React.Component {
     componentDidMount () {
         if (this.shouldBeAutosaving()) {
             this.queueRestorePoint();
+        }
+
+        if (shouldRemoveLegacyRestorePoint()) {
+            RestorePointAPI.deleteLegacyRestorePoint();
         }
     }
 
@@ -303,7 +311,7 @@ class TWRestorePointManager extends React.Component {
                     onClickDelete={this.handleClickDelete}
                     onClickDeleteAll={this.handleClickDeleteAll}
                     onClickLoad={this.handleClickLoad}
-                    onClickLoadLegacy={this.handleClickLoadLegacy}
+                    onClickLoadLegacy={shouldRemoveLegacyRestorePoint() ? null : this.handleClickLoadLegacy}
                     disabled={this.isDisabled()}
                     isLoading={this.state.loading}
                     totalSize={this.state.totalSize}

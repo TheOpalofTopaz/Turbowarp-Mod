@@ -502,29 +502,26 @@ const getThumbnail = id => openDB().then(db => new Promise((resolve, reject) => 
     };
 }));
 
-// We will enable this after a couple days
-/*
-const deleteLegacyData = () => {
+const LEGACY_DATABASE_NAME = 'TW_AutoSave';
+const LEGACY_DATABASE_VERSION = 1;
+const LEGACY_STORE_NAME = 'project';
+
+const deleteLegacyRestorePoint = () => {
     try {
         if (typeof indexedDB !== 'undefined') {
-            const _request = indexedDB.deleteDatabase('TW_AutoSave');
+            const _request = indexedDB.deleteDatabase(LEGACY_DATABASE_NAME);
             // don't really care what happens to the request at this point
         }
     } catch (e) {
         // ignore
     }
 };
-*/
 
 const loadLegacyRestorePoint = () => new Promise((resolve, reject) => {
     if (typeof indexedDB === 'undefined') {
         reject(new Error('indexedDB not supported'));
         return;
     }
-
-    const LEGACY_DATABASE_NAME = 'TW_AutoSave';
-    const LEGACY_DATABASE_VERSION = 1;
-    const LEGACY_STORE_NAME = 'project';
 
     const openRequest = indexedDB.open(LEGACY_DATABASE_NAME, LEGACY_DATABASE_VERSION);
     openRequest.onerror = () => {
@@ -574,5 +571,6 @@ export default {
     deleteAllRestorePoints,
     getThumbnail,
     loadRestorePoint,
-    loadLegacyRestorePoint
+    loadLegacyRestorePoint,
+    deleteLegacyRestorePoint
 };

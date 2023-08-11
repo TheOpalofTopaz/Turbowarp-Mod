@@ -133,7 +133,7 @@ const RestorePointModal = props => (
                 </div>
             )}
 
-            {!props.isLoading && (
+            {!props.isLoading && props.onClickLoadLegacy && (
                 <details className={styles.legacyTransition}>
                     {/* This is going away within a few days */}
                     {/* No reason to bother translating */}
@@ -163,7 +163,7 @@ RestorePointModal.propTypes = {
     onClickDelete: PropTypes.func.isRequired,
     onClickDeleteAll: PropTypes.func.isRequired,
     onClickLoad: PropTypes.func.isRequired,
-    onClickLoadLegacy: PropTypes.func.isRequired,
+    onClickLoadLegacy: PropTypes.func,
     disabled: PropTypes.bool.isRequired,
     isLoading: PropTypes.bool.isRequired,
     totalSize: PropTypes.number.isRequired,
