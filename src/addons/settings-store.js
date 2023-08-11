@@ -78,7 +78,7 @@ const migrateSettings = settings => {
     }
 
     // Migrate 4 -> 5
-    // tw-disable-restore-poitns was removed and replaced with a new local storage key.
+    // tw-disable-restore-points was removed and replaced with a new local storage key.
     if (oldVersion < 5) {
         const disableRestorePoints = settings['tw-disable-restore-points'];
         if (disableRestorePoints && disableRestorePoints.enabled) {
