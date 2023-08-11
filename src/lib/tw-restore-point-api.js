@@ -561,6 +561,32 @@ const loadLegacyRestorePoint = () => new Promise((resolve, reject) => {
     };
 });
 
+const DEFAULT_INTERVAL = 1000 * 60 * 5;
+const INTERVAL_STORAGE_KEY = 'tw:restore-point-interval';
+
+const readInterval = () => {
+    try {
+        const stored = localStorage.getItem(INTERVAL_STORAGE_KEY);
+        if (stored) {
+            const number = +stored;
+            if (Number.isFinite(number)) {
+                return number;
+            }
+        }
+    } catch (e) {
+        // ignore
+    }
+    return DEFAULT_INTERVAL;
+};
+
+const setInterval = interval => {
+    try {
+        localStorage.setItem(INTERVAL_STORAGE_KEY, interval);
+    } catch (err) {
+        // ignore
+    }
+};
+
 export default {
     TYPE_AUTOMATIC,
     TYPE_MANUAL,
@@ -572,5 +598,7 @@ export default {
     getThumbnail,
     loadRestorePoint,
     loadLegacyRestorePoint,
-    deleteLegacyRestorePoint
+    deleteLegacyRestorePoint,
+    readInterval,
+    setInterval
 };

@@ -10,12 +10,10 @@ import {setFileHandle} from '../reducers/tw';
 import TWRestorePointModal from '../components/tw-restore-point-modal/restore-point-modal.jsx';
 import RestorePointAPI from '../lib/tw-restore-point-api';
 import log from '../lib/log';
-import AddonHooks from '../addons/hooks';
 import isScratchDesktop from '../lib/isScratchDesktop';
 
 /* eslint-disable no-alert */
 
-const AUTOMATIC_INTERVAL = 1000 * 60 * 5;
 const SAVE_DELAY = 250;
 const MINIMUM_SAVE_TIME = 750;
 
@@ -54,6 +52,7 @@ class TWRestorePointManager extends React.Component {
             'handleClickCreate',
             'handleClickDelete',
             'handleClickDeleteAll',
+            'handleChangeInterval',
             'handleClickLoad',
             'handleClickLoadLegacy'
         ]);
@@ -61,7 +60,8 @@ class TWRestorePointManager extends React.Component {
             loading: true,
             totalSize: 0,
             restorePoints: [],
-            error: null
+            error: null,
+            interval: RestorePointAPI.readInterval()
         };
         this.timeout = null;
     }
@@ -107,10 +107,6 @@ class TWRestorePointManager extends React.Component {
 
     shouldBeAutosaving () {
         return this.props.projectChanged && this.props.isShowingProject;
-    }
-
-    isDisabled () {
-        return AddonHooks.disableRestorePoints;
     }
 
     handleClickCreate () {
@@ -222,10 +218,24 @@ class TWRestorePointManager extends React.Component {
         this._finishLoading(false);
     }
 
+    handleChangeInterval (e) {
+        const interval = +e.target.value;
+        RestorePointAPI.setInterval(interval);
+        this.setState({
+            interval
+        }, () => {
+            if (this.shouldBeAutosaving()) {
+                this.cancelQueuedRestorePoint();
+                this.queueRestorePoint();
+            }
+        });
+    }
+
     queueRestorePoint () {
-        if (this.timeout) {
+        if (this.timeout || this.state.interval < 0) {
             return;
         }
+        console.log('Creating in', this.state.interval);
         this.timeout = setTimeout(() => {
             this.createRestorePoint(RestorePointAPI.TYPE_AUTOMATIC).then(() => {
                 this.timeout = null;
@@ -233,21 +243,18 @@ class TWRestorePointManager extends React.Component {
                     this.queueRestorePoint();
                 }
             });
-        }, AUTOMATIC_INTERVAL);
+        }, this.state.interval);
     }
 
     cancelQueuedRestorePoint () {
         if (this.timeout) {
+            console.log('Cancelled');
             clearTimeout(this.timeout);
             this.timeout = null;
         }
     }
 
     createRestorePoint (type) {
-        if (this.isDisabled()) {
-            return Promise.reject(new Error('Disabled'));
-        }
-
         if (this.props.isModalVisible) {
             this.setState({
                 loading: true
@@ -317,7 +324,8 @@ class TWRestorePointManager extends React.Component {
                     onClickDeleteAll={this.handleClickDeleteAll}
                     onClickLoad={this.handleClickLoad}
                     onClickLoadLegacy={shouldRemoveLegacyRestorePoint() ? null : this.handleClickLoadLegacy}
-                    disabled={this.isDisabled()}
+                    interval={this.state.interval}
+                    onChangeInterval={this.handleChangeInterval}
                     isLoading={this.state.loading}
                     totalSize={this.state.totalSize}
                     restorePoints={this.state.restorePoints}
