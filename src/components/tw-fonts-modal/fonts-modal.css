@@ -21,7 +21,7 @@
 
 .open-buttons {
     display: flex;
-    gap: 0.5rem;
+    gap: 1rem;
 }
 .open-button {
     display: flex;
@@ -30,12 +30,14 @@
     width: 100%;
     align-items: center;
     background: none;
-    padding: 0;
+    padding: 0.5rem;
     margin: 0;
-    border: none;
+    border: 2px solid $ui-black-transparent;
+    border-radius: 0.5rem;
 }
 .open-button:hover {
     color: $motion-primary;
+    border-color: $motion-primary;
 }
 .open-button-image {
     width: 64px;
@@ -130,7 +132,7 @@
 }
 
 .fonts-outer {
-    border-top: 1px solid $ui-black-transparent;
+    border-top: 2px solid $ui-black-transparent;
     padding-top: 1rem;
 }
 .fonts-outer p {
@@ -153,27 +155,36 @@
     gap: 0.5rem;
 }
 .manage-font-name {
-    font-size: 1.5rem;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    overflow-wrap: anywhere;
 }
-.manage-font-delete {
+
+.manage-font-buttons {
+    margin-left: auto;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+}
+.manage-font-button {
     background: none;
     border: none;
     border-radius: 100%;
     width: 2rem;
     height: 2rem;
-    margin-left: auto;
     display: flex;
     align-items: center;
     justify-content: center;
 }
-.manage-font-delete:hover {
+.manage-font-button:hover {
     background-color: $ui-black-transparent;
 }
-.manage-font-delete img {
+.manage-font-button img {
     display: block;
-    width: 75%;
-    height: 75%;
+    width: 100%;
+    height: 100%;
 }
-[theme="dark"] .manage-font-delete img {
+[theme="dark"] .manage-font-button img {
     filter: invert(100%);
 }

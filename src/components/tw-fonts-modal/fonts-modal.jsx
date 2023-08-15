@@ -6,7 +6,6 @@ import Modal from '../../containers/modal.jsx';
 import ManageFont from './manage-font.jsx';
 import AddSystemFont from './add-system-font.jsx';
 import AddCustomFont, {FONT_FORMATS} from './add-custom-font.jsx';
-import AddLibraryFont from './add-library-font.jsx';
 import styles from './fonts-modal.css';
 
 const messages = defineMessages({
@@ -79,11 +78,6 @@ const FontModal = props => (
                         </div>
                     </button>
                 </div>
-            ) : props.screen === 'library' ? (
-                <AddLibraryFont
-                    fontManager={props.fontManager}
-                    onClose={props.onClose}
-                />
             ) : props.screen === 'system' ? (
                 <AddSystemFont
                     fontManager={props.fontManager}
@@ -122,8 +116,10 @@ const FontModal = props => (
                             {props.fonts.map((font, index) => (
                                 <ManageFont
                                     key={index}
+                                    system={font.system}
                                     name={font.name}
                                     family={font.family}
+                                    data={font.data}
                                     index={index}
                                     fontManager={props.fontManager}
                                 />
@@ -140,13 +136,14 @@ FontModal.propTypes = {
     intl: intlShape,
     onClose: PropTypes.func.isRequired,
     fonts: PropTypes.arrayOf(PropTypes.shape({
+        system: PropTypes.bool.isRequired,
         name: PropTypes.string.isRequired,
-        family: PropTypes.string.isRequired
+        family: PropTypes.string.isRequired,
+        data: PropTypes.instanceOf(Uint8Array)
     }).isRequired).isRequired,
     fontManager: PropTypes.shape({}),
     screen: PropTypes.oneOf([
         '',
-        'library',
         'system',
         'custom'
     ]),

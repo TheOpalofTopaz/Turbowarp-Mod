@@ -11,6 +11,7 @@ class LoadFont extends React.Component {
 
     componentDidMount () {
         this.style = document.createElement('style');
+        this.style.className = 'gui-temp-font';
         document.head.appendChild(this.style);
         this.updateStyle();
     }

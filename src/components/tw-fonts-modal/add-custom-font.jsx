@@ -4,6 +4,7 @@ import {injectIntl, intlShape, defineMessages, FormattedMessage} from 'react-int
 import bindAll from 'lodash.bindall';
 import styles from './fonts-modal.css';
 import LoadTemporaryFont from './load-temporary-font.jsx';
+import FontName from './font-name.jsx';
 import FontPlayground from './font-playground.jsx';
 import FontFallback from './font-fallback.jsx';
 import AddButton from './add-button.jsx';
@@ -72,9 +73,9 @@ class AddCustomFont extends React.Component {
         }
     }
 
-    handleChangeName (e) {
+    handleChangeName (name) {
         this.setState({
-            name: e.target.value
+            name
         });
     }
 
@@ -137,30 +138,27 @@ class AddCustomFont extends React.Component {
                             />
                         </p>
 
-                        <input
-                            type="text"
-                            className={styles.fontInput}
+                        <FontName
+                            name={this.state.name}
                             onChange={this.handleChangeName}
-                            value={this.state.name}
-                            autoFocus
-                            readOnly={this.state.loading}
+                            fontManager={this.props.fontManager}
                         />
 
                         <LoadTemporaryFont url={this.state.url}>{family => (
-                            <FontPlayground family={family} />
+                            <FontPlayground family={`${family}, ${this.state.fallback}`} />
                         )}</LoadTemporaryFont>
 
                         <FontFallback
                             fallback={this.state.fallback}
                             onChange={this.handleChangeFallback}
                         />
-
-                        <AddButton
-                            onClick={this.handleFinish}
-                            disabled={!this.state.name || this.state.loading}
-                        />
                     </React.Fragment>
                 )}
+
+                <AddButton
+                    onClick={this.handleFinish}
+                    disabled={!this.state.file || !this.state.name || this.state.loading}
+                />
             </React.Fragment>
         );
     }

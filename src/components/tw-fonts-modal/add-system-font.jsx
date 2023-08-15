@@ -2,21 +2,21 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {FormattedMessage} from 'react-intl';
 import bindAll from 'lodash.bindall';
+import FontName from './font-name.jsx';
 import FontPlayground from './font-playground.jsx';
 import FontFallback from './font-fallback.jsx';
 import AddButton from './add-button.jsx';
-import styles from './fonts-modal.css';
 
 class AddSystemFont extends React.Component {
     constructor (props) {
         super(props);
         bindAll(this, [
-            'handleChange',
+            'handleChangeName',
             'handleChangeFallback',
             'handleFinish'
         ]);
         this.state = {
-            font: '',
+            name: '',
             fallback: FontFallback.DEFAULT,
             localFonts: null
         };
@@ -35,9 +35,9 @@ class AddSystemFont extends React.Component {
         }
     }
 
-    handleChange (e) {
+    handleChangeName (name) {
         this.setState({
-            font: e.target.value
+            name
         });
     }
 
@@ -48,7 +48,7 @@ class AddSystemFont extends React.Component {
     }
 
     handleFinish () {
-        this.props.fontManager.addSystemFont(this.state.font, this.state.fallback);
+        this.props.fontManager.addSystemFont(this.state.name, this.state.fallback);
         this.props.onClose();
     }
 
@@ -64,27 +64,28 @@ class AddSystemFont extends React.Component {
                     />
                 </p>
 
-                {/* TODO: datalist is acutally just not very good. we should consider our own dropdown. */}
-                <input
-                    value={this.state.font}
-                    onChange={this.handleChange}
-                    className={styles.fontInput}
+                {/* TODO: datalist is pretty bad at this. we should try our own dropdown? */}
+                <FontName
+                    name={this.state.name}
+                    onChange={this.handleChangeName}
+                    fontManager={this.props.fontManager}
                     placeholder="Wingdings"
-                    autoFocus
                     list="fontslist"
                 />
-                <datalist id="fontslist">
-                    {this.state.localFonts && this.state.localFonts.map(family => (
-                        <option
-                            key={family}
-                            value={family}
-                        />
-                    ))}
-                </datalist>
+                {this.state.localFonts && (
+                    <datalist id="fontslist">
+                        {this.state.localFonts.map(family => (
+                            <option
+                                key={family}
+                                value={family}
+                            />
+                        ))}
+                    </datalist>
+                )}
 
-                {this.state.font && (
+                {this.state.name && (
                     <React.Fragment>
-                        <FontPlayground family={this.state.font} />
+                        <FontPlayground family={`${this.state.name}, ${this.state.fallback}`} />
 
                         <FontFallback
                             fallback={this.state.fallback}
@@ -95,7 +96,7 @@ class AddSystemFont extends React.Component {
 
                 <AddButton
                     onClick={this.handleFinish}
-                    disabled={!this.state.font}
+                    disabled={!this.state.name}
                 />
             </React.Fragment>
         );
@@ -104,7 +105,8 @@ class AddSystemFont extends React.Component {
 
 AddSystemFont.propTypes = {
     fontManager: PropTypes.shape({
-        addSystemFont: PropTypes.func.isRequired
+        addSystemFont: PropTypes.func.isRequired,
+        hasFont: PropTypes.func.isRequired
     }).isRequired,
     onClose: PropTypes.func.isRequired
 };
