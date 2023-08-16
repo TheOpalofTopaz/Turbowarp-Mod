@@ -17,6 +17,13 @@ const messages = defineMessages({
     }
 });
 
+export const FONT_FORMATS = [
+    'ttf',
+    'otf',
+    'woff',
+    'woff2'
+];
+
 const formatFontName = filename => {
     // Remove file extension
     const idx = filename.indexOf('.');
@@ -26,12 +33,15 @@ const formatFontName = filename => {
     return filename;
 };
 
-export const FONT_FORMATS = [
-    '.ttf',
-    '.otf',
-    '.woff',
-    '.woff2'
-];
+const getDataFormat = filename => {
+    const parts = filename.split('.');
+    const extension = parts[parts.length - 1];
+    if (FONT_FORMATS.includes(extension)) {
+        return extension;
+    }
+    // We'll just guess
+    return 'ttf';
+};
 
 class AddCustomFont extends React.Component {
     constructor (props) {
@@ -46,6 +56,7 @@ class AddCustomFont extends React.Component {
             file: null,
             url: null,
             name: '',
+            format: '',
             fallback: FontFallback.DEFAULT,
             loading: false
         };
@@ -61,6 +72,7 @@ class AddCustomFont extends React.Component {
             this.setState({
                 file,
                 name: formatFontName(file.name),
+                format: getDataFormat(file.name),
                 url: URL.createObjectURL(file)
             });
         } else {
@@ -93,7 +105,15 @@ class AddCustomFont extends React.Component {
         const fr = new FileReader();
         fr.onload = () => {
             const data = new Uint8Array(fr.result);
-            this.props.fontManager.addCustomFont(this.state.name, this.state.fallback, data);
+            const storage = this.props.fontManager.runtime.storage;
+            const asset = storage.createAsset(
+                storage.AssetType.Font,
+                this.state.format,
+                data,
+                null,
+                true
+            );
+            this.props.fontManager.addCustomFont(this.state.name, this.state.fallback, asset);
             this.props.onClose();
         };
         fr.onerror = () => {
@@ -124,7 +144,7 @@ class AddCustomFont extends React.Component {
                     type="file"
                     onChange={this.handleChangeFile}
                     className={styles.fileInput}
-                    accept={FONT_FORMATS.join(',')}
+                    accept={FONT_FORMATS.map(ext => `.${ext}`).join(',')}
                     readOnly={this.state.loading}
                 />
 
@@ -167,7 +187,11 @@ class AddCustomFont extends React.Component {
 AddCustomFont.propTypes = {
     intl: intlShape,
     fontManager: PropTypes.shape({
-        addCustomFont: PropTypes.func
+        addCustomFont: PropTypes.func,
+        runtime: PropTypes.shape({
+            // eslint-disable-next-line react/forbid-prop-types
+            storage: PropTypes.any
+        })
     }),
     onClose: PropTypes.func.isRequired
 };

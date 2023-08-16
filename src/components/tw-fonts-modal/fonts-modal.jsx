@@ -120,6 +120,7 @@ const FontModal = props => (
                                     name={font.name}
                                     family={font.family}
                                     data={font.data}
+                                    format={font.format}
                                     index={index}
                                     fontManager={props.fontManager}
                                 />
@@ -139,7 +140,8 @@ FontModal.propTypes = {
         system: PropTypes.bool.isRequired,
         name: PropTypes.string.isRequired,
         family: PropTypes.string.isRequired,
-        data: PropTypes.instanceOf(Uint8Array)
+        data: PropTypes.instanceOf(Uint8Array),
+        format: PropTypes.string
     }).isRequired).isRequired,
     fontManager: PropTypes.shape({}),
     screen: PropTypes.oneOf([

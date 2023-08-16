@@ -28,9 +28,9 @@ class ManageFont extends React.Component {
 
     handleExport () {
         const blob = new Blob([this.props.data], {
-            contentType: 'font/ttf'
+            contentType: `font/${this.props.format}`
         });
-        downloadBlob(`${this.props.name}.ttf`, blob);
+        downloadBlob(`${this.props.name}.${this.props.format}`, blob);
     }
 
     handleDelete () {
@@ -106,6 +106,7 @@ ManageFont.propTypes = {
     name: PropTypes.string.isRequired,
     family: PropTypes.string.isRequired,
     data: PropTypes.instanceOf(Uint8Array),
+    format: PropTypes.string,
     index: PropTypes.number.isRequired,
     fontManager: PropTypes.shape({
         deleteFont: PropTypes.func.isRequired
