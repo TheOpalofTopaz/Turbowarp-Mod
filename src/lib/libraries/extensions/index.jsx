@@ -562,6 +562,13 @@ export default [
         iconURL: fetchIcon
     }),
     galleryItem({
+        name: 'Numerical Encoding',
+        description: 'Encode strings as numbers for cloud variables. Created by cs2627883',
+        extensionId: 'cs2627883NumericalEncoding',
+        extensionURL: 'https://extensions.turbowarp.org/cs2627883/numericalencoding.js',
+        iconURL: 'https://extensions.turbowarp.org/images/cs2627883/numericalencoding.svg'
+    }),
+    galleryItem({
         name: 'Local Storage',
         description: 'Store data persistently. Like cookies, but better.',
         extensionId: 'localstorage',
