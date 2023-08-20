@@ -53,7 +53,11 @@ class LibraryItem extends React.PureComponent {
         }
 
         if (!this.props.disabled) {
-            this.props.onSelect(this.props.id);
+            if (this.props.href) {
+                window.open(this.props.href);
+            } else {
+                this.props.onSelect(this.props.id);
+            }
         }
         e.preventDefault();
     }
@@ -169,6 +173,7 @@ LibraryItem.propTypes = {
     ]),
     disabled: PropTypes.bool,
     extensionId: PropTypes.string,
+    href: PropTypes.string,
     featured: PropTypes.bool,
     hidden: PropTypes.bool,
     iconMd5: PropTypes.string,

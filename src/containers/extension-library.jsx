@@ -5,11 +5,16 @@ import VM from 'scratch-vm';
 import {defineMessages, injectIntl, intlShape} from 'react-intl';
 import log from '../lib/log';
 
-import extensionLibraryContent from '../lib/libraries/extensions/index.jsx';
+import extensionLibraryContent, {
+    galleryError,
+    galleryLoading,
+    galleryMore
+} from '../lib/libraries/extensions/index.jsx';
 import extensionTags from '../lib/libraries/tw-extension-tags';
 
 import LibraryComponent from '../components/library/library.jsx';
 import extensionIcon from '../components/action-menu/icon--sprite.svg';
+import Separator from '../components/tw-extension-separator/separator.jsx';
 
 const messages = defineMessages({
     extensionTitle: {
@@ -17,6 +22,11 @@ const messages = defineMessages({
         description: 'Heading for the extension library',
         id: 'gui.extensionLibrary.chooseAnExtension'
     }
+});
+
+const toLibraryItem = extension => ({
+    rawURL: extension.iconURL || extensionIcon,
+    ...extension
 });
 
 let cachedGallery = null;
@@ -67,17 +77,25 @@ class ExtensionLibrary extends React.PureComponent {
             'handleItemSelect'
         ]);
         this.state = {
-            gallery: cachedGallery
+            gallery: cachedGallery,
+            galleryError: null
         };
     }
     componentDidMount () {
         if (!this.state.gallery) {
-            fetchLibrary().then(gallery => {
-                cachedGallery = gallery;
-                this.setState({
-                    gallery
+            fetchLibrary()
+                .then(gallery => {
+                    cachedGallery = gallery;
+                    this.setState({
+                        gallery
+                    });
+                })
+                .catch(error => {
+                    log.error(error);
+                    this.setState({
+                        galleryError: error
+                    });
                 });
-            });
         }
     }
     handleItemSelect (item) {
@@ -118,16 +136,20 @@ class ExtensionLibrary extends React.PureComponent {
         }
     }
     render () {
-        const extensionLibraryThumbnailData = [
-            ...extensionLibraryContent,
-            ...(this.state.gallery || [])
-        ].map(extension => ({
-            rawURL: extension.iconURL || extensionIcon,
-            ...extension
-        }));
+        const library = extensionLibraryContent.map(toLibraryItem);
+        library.push(<Separator />);
+        if (this.state.gallery) {
+            library.push(...this.state.gallery.map(toLibraryItem));
+            library.push(toLibraryItem(galleryMore));
+        } else if (this.state.galleryError) {
+            library.push(toLibraryItem(galleryError));
+        } else {
+            library.push(toLibraryItem(galleryLoading));
+        }
+
         return (
             <LibraryComponent
-                data={extensionLibraryThumbnailData}
+                data={library}
                 filterable
                 id="extensionLibrary"
                 tags={extensionTags}
