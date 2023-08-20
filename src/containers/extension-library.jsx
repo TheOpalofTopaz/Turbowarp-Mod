@@ -37,8 +37,7 @@ const fetchLibrary = async () => {
         extensionId: extension.id,
         extensionURL: `https://extensions.turbowarp.org/${extension.slug}.js`,
         iconURL: `https://extensions.turbowarp.org/${extension.image || 'images/unknown.svg'}`,
-        iconWidth: 300,
-        iconHeight: 150,
+        iconAspectRatio: 2,
         tags: ['tw'],
         incompatibleWithScratch: true,
         featured: true
