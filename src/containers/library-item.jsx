@@ -1,9 +1,18 @@
 import bindAll from 'lodash.bindall';
 import PropTypes from 'prop-types';
 import React from 'react';
-import {injectIntl} from 'react-intl';
+import {injectIntl, intlShape, defineMessages} from 'react-intl';
 
 import LibraryItemComponent from '../components/library-item/library-item.jsx';
+
+const messages = defineMessages({
+    incompatible: {
+        // eslint-disable-next-line max-len
+        defaultMessage: 'This extension is incompatible with Scratch. Projects made with it cannot be uploaded to the Scratch website. Are you sure you want to enable it?',
+        description: 'Confirm loading Scratch-incompatible extension',
+        id: 'tw.confirmIncompatibleExtension'
+    }
+});
 
 class LibraryItem extends React.PureComponent {
     constructor (props) {
@@ -34,8 +43,15 @@ class LibraryItem extends React.PureComponent {
     }
     handleClick (e) {
         if (e.target.href) {
+            // Allow clicking on links inside the item
             return;
         }
+
+        // eslint-disable-next-line no-alert
+        if (this.props.incompatibleWithScratch && !confirm(this.props.intl.formatMessage(messages.incompatible))) {
+            return;
+        }
+
         if (!this.props.disabled) {
             this.props.onSelect(this.props.id);
         }
@@ -144,6 +160,7 @@ class LibraryItem extends React.PureComponent {
 }
 
 LibraryItem.propTypes = {
+    intl: intlShape,
     bluetoothRequired: PropTypes.bool,
     collaborator: PropTypes.string,
     description: PropTypes.oneOfType([
@@ -164,6 +181,7 @@ LibraryItem.propTypes = {
         })
     ),
     id: PropTypes.number.isRequired,
+    incompatibleWithScratch: PropTypes.bool,
     insetIconURL: PropTypes.string,
     internetConnectionRequired: PropTypes.bool,
     isPlaying: PropTypes.bool,
