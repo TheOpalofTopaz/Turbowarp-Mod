@@ -25,6 +25,8 @@ const messages = defineMessages({
     }
 });
 
+let cachedGallery = null;
+
 const fetchLibrary = async () => {
     const res = await fetch('https://extensions.turbowarp.org/generated-metadata/extensions-v0.json');
     if (!res.ok) {
@@ -71,15 +73,18 @@ class ExtensionLibrary extends React.PureComponent {
             'handleItemSelect'
         ]);
         this.state = {
-            gallery: []
+            gallery: cachedGallery
         };
     }
     componentDidMount () {
-        fetchLibrary().then(gallery => {
-            this.setState({
-                gallery
+        if (!this.state.gallery) {
+            fetchLibrary().then(gallery => {
+                cachedGallery = gallery;
+                this.setState({
+                    gallery
+                });
             });
-        });
+        }
     }
     handleItemSelect (item) {
         if (item.href) {
@@ -126,7 +131,7 @@ class ExtensionLibrary extends React.PureComponent {
     render () {
         const extensionLibraryThumbnailData = [
             ...extensionLibraryContent,
-            ...this.state.gallery
+            ...(this.state.gallery || [])
         ].map(extension => ({
             rawURL: extension.iconURL || extensionIcon,
             ...extension
