@@ -47,10 +47,7 @@ import gdxforConnectionIconURL from './gdxfor/gdxfor-illustration.svg';
 import gdxforConnectionSmallIconURL from './gdxfor/gdxfor-small.svg';
 
 import twIcon from './tw/tw.svg';
-
 import customExtensionIcon from './custom/custom.svg';
-
-import galleryIcon from './gallery/gallery.svg';
 import returnIcon from './custom/return.svg';
 
 export default [
@@ -352,29 +349,6 @@ export default [
                 defaultMessage="Allow custom blocks to output values and be used as inputs."
                 description="Description of custom reporters extension"
                 id="tw.customReporters.description"
-            />
-        ),
-        tags: ['tw'],
-        incompatibleWithScratch: true,
-        featured: true
-    },
-    {
-        name: (
-            <FormattedMessage
-                defaultMessage="TurboWarp Extension Gallery"
-                description="Name of extensions.turbowarp.org in extension library"
-                id="tw.extensionGallery.name"
-            />
-        ),
-        href: 'https://extensions.turbowarp.org/',
-        extensionId: '',
-        iconURL: galleryIcon,
-        description: (
-            <FormattedMessage
-                // eslint-disable-next-line max-len
-                defaultMessage="We list many extensions here for convenience. You can find even more on extensions.turbowarp.org."
-                description="Description of extensions.turbowarp.org in extension library"
-                id="tw.extensionGallery.description"
             />
         ),
         tags: ['tw'],

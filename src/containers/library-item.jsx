@@ -149,7 +149,6 @@ LibraryItem.propTypes = {
     extensionId: PropTypes.string,
     featured: PropTypes.bool,
     hidden: PropTypes.bool,
-    href: PropTypes.string,
     iconMd5: PropTypes.string,
     iconRawURL: PropTypes.string,
     icons: PropTypes.arrayOf(

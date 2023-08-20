@@ -82,13 +82,7 @@ class LibraryComponent extends React.Component {
         }
     }
     handleSelect (id) {
-        const extension = this.getFilteredData()[id];
-        if (extension.href) {
-            window.open(extension.href);
-        }
-        if (!extension.href || isScratchDesktop()) {
-            this.handleClose();
-        }
+        this.handleClose();
         this.props.onItemSelected(this.getFilteredData()[id]);
     }
     handleClose () {
@@ -246,7 +240,6 @@ class LibraryComponent extends React.Component {
                             extensionId={dataItem.extensionId}
                             featured={dataItem.featured}
                             hidden={dataItem.hidden}
-                            href={dataItem.href}
                             iconMd5={dataItem.costumes ? dataItem.costumes[0].md5ext : dataItem.md5ext}
                             iconRawURL={dataItem.rawURL}
                             icons={dataItem.costumes}
