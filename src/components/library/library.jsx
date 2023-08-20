@@ -164,7 +164,7 @@ class LibraryComponent extends React.Component {
                 return search
                     .join('\n')
                     .toLowerCase()
-                    .includes(this.state.filterQuery);
+                    .includes(this.state.filterQuery.toLowerCase());
             });
         }
         return this.state.data.filter(dataItem => (
