@@ -154,19 +154,24 @@ class LibraryComponent extends React.Component {
     getFilteredData () {
         if (this.state.selectedTag === 'all') {
             if (!this.state.filterQuery) return this.state.data;
-            return this.state.data.filter(dataItem => (
-                (dataItem.tags || [])
-                    // Second argument to map sets `this`
-                    .map(String.prototype.toLowerCase.call, String.prototype.toLowerCase)
-                    .concat(dataItem.name ?
-                        (typeof dataItem.name === 'string' ?
-                        // Use the name if it is a string, else use formatMessage to get the translated name
-                            dataItem.name : this.props.intl.formatMessage(dataItem.name.props)
-                        ).toLowerCase() :
-                        null)
-                    .join('\n') // unlikely to partially match newlines
-                    .indexOf(this.state.filterQuery.toLowerCase()) !== -1
-            ));
+            return this.state.data.filter(dataItem => {
+                const search = [...dataItem.tags];
+                if (dataItem.name) {
+                    // Use the name if it is a string, else use formatMessage to get the translated name
+                    if (typeof dataItem.name === 'string') {
+                        search.push(dataItem.name);
+                    } else {
+                        search.push(this.props.intl.formatMessage(dataItem.name.props));
+                    }
+                }
+                if (dataItem.description) {
+                    search.push(dataItem.description);
+                }
+                return search
+                    .join('\n')
+                    .toLowerCase()
+                    .includes(this.state.filterQuery);
+            });
         }
         return this.state.data.filter(dataItem => (
             dataItem.tags &&
