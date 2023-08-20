@@ -192,11 +192,12 @@
 }
 
 .credits-outer {
-    width: 100%;
-    text-align: left;
+    width: 300px;
     padding: 0 1.25rem 1rem 1.25rem;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    opacity: 0.75;
+    text-align: left;
 }
 .credits-inner {
     display: flex;
@@ -205,8 +206,9 @@
 .credits-title {
     margin-right: 0.25rem;
 }
-.credits-list {
-
+.credits-list a {
+    color: inherit !important;
+    text-decoration: underline;
 }
 
 
