@@ -25,12 +25,42 @@ const messages = defineMessages({
     }
 });
 
+const fetchLibrary = async () => {
+    const res = await fetch('https://extensions.turbowarp.org/generated-metadata/extensions-v0.json');
+    if (!res.ok) {
+        throw new Error(`HTTP status ${res.status}`);
+    }
+    const data = await res.json();
+    return data.extensions.map(extension => ({
+        name: extension.name,
+        description: extension.description,
+        extensionId: extension.id,
+        extensionURL: `https://extensions.turbowarp.org/${extension.slug}.js`,
+        iconURL: `https://extensions.turbowarp.org/${extension.image || 'images/unknown.svg'}`,
+        iconWidth: 300,
+        iconHeight: 150,
+        tags: ['tw'],
+        incompatibleWithScratch: true,
+        featured: true
+    }));
+};
+
 class ExtensionLibrary extends React.PureComponent {
     constructor (props) {
         super(props);
         bindAll(this, [
             'handleItemSelect'
         ]);
+        this.state = {
+            gallery: []
+        };
+    }
+    componentDidMount () {
+        fetchLibrary().then(gallery => {
+            this.setState({
+                gallery
+            });
+        });
     }
     handleItemSelect (item) {
         if (item.href) {
@@ -75,7 +105,10 @@ class ExtensionLibrary extends React.PureComponent {
         }
     }
     render () {
-        const extensionLibraryThumbnailData = extensionLibraryContent.map(extension => ({
+        const extensionLibraryThumbnailData = [
+            ...extensionLibraryContent,
+            ...this.state.gallery
+        ].map(extension => ({
             rawURL: extension.iconURL || extensionIcon,
             ...extension
         }));
