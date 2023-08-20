@@ -250,6 +250,7 @@ class LibraryComponent extends React.Component {
                             isPlaying={this.state.playingItem === index}
                             key={typeof dataItem.name === 'string' ? dataItem.name : dataItem.rawURL}
                             name={dataItem.name}
+                            credits={dataItem.credits}
                             showPlayButton={this.props.showPlayButton}
                             onMouseEnter={this.handleMouseEnter}
                             onMouseLeave={this.handleMouseLeave}

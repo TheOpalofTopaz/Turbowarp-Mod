@@ -62,6 +62,31 @@ class LibraryItemComponent extends React.PureComponent {
                     <br />
                     <span className={styles.featuredDescription}>{this.props.description}</span>
                 </div>
+
+                {this.props.credits && this.props.credits.length > 0 && (
+                    <div className={styles.creditsOuter}>
+                        <div className={styles.creditsInner}>
+                            <div className={styles.creditsTitle}>
+                                <FormattedMessage
+                                    defaultMessage="Created by:"
+                                    description="Appears in the extension list. Followed by a list of names."
+                                    id="tw.createdBy"
+                                />
+                            </div>
+                            <div className={styles.creditsList}>
+                                {this.props.credits.map((credit, index) => (
+                                    <React.Fragment key={index}>
+                                        {credit}
+                                        {index !== this.props.credits.length - 1 && (
+                                            ', '
+                                        )}
+                                    </React.Fragment>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                )}
+
                 {this.props.bluetoothRequired || this.props.internetConnectionRequired || this.props.collaborator ? (
                     <div className={styles.featuredExtensionMetadata}>
                         <div className={styles.featuredExtensionRequirement}>
@@ -173,6 +198,10 @@ LibraryItemComponent.propTypes = {
         PropTypes.string,
         PropTypes.node
     ]),
+    credits: PropTypes.arrayOf(PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.node
+    ])),
     onBlur: PropTypes.func.isRequired,
     onClick: PropTypes.func.isRequired,
     onFocus: PropTypes.func.isRequired,

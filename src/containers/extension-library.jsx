@@ -31,17 +31,37 @@ const fetchLibrary = async () => {
         throw new Error(`HTTP status ${res.status}`);
     }
     const data = await res.json();
-    return data.extensions.map(extension => ({
-        name: extension.name,
-        description: extension.description,
-        extensionId: extension.id,
-        extensionURL: `https://extensions.turbowarp.org/${extension.slug}.js`,
-        iconURL: `https://extensions.turbowarp.org/${extension.image || 'images/unknown.svg'}`,
-        iconAspectRatio: 2,
-        tags: ['tw'],
-        incompatibleWithScratch: true,
-        featured: true
-    }));
+    return data.extensions.map(extension => {
+        const allCredits = [
+            ...(extension.by || []),
+            ...(extension.original || [])
+        ];
+        return {
+            name: extension.name,
+            description: extension.description,
+            extensionId: extension.id,
+            extensionURL: `https://extensions.turbowarp.org/${extension.slug}.js`,
+            iconURL: `https://extensions.turbowarp.org/${extension.image || 'images/unknown.svg'}`,
+            iconAspectRatio: 2,
+            tags: ['tw'],
+            credits: allCredits.map(credit => {
+                if (credit.link) {
+                    return (
+                        <a
+                            href={credit.link}
+                            target="_blank"
+                            rel="noreferrer"
+                        >
+                            {credit.name}
+                        </a>
+                    );
+                }
+                return credit.name;
+            }),
+            incompatibleWithScratch: true,
+            featured: true
+        };
+    });
 };
 
 class ExtensionLibrary extends React.PureComponent {

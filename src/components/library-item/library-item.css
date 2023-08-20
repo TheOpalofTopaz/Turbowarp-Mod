@@ -189,6 +189,25 @@
     margin-right: 0.25rem;
 }
 
+.credits-outer {
+    width: 100%;
+    text-align: left;
+    padding: 0 1.25rem 1rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+}
+.credits-inner {
+    display: flex;
+    flex-direction: row;
+}
+.credits-title {
+    margin-right: 0.25rem;
+}
+.credits-list {
+
+}
+
+
 .coming-soon-text {
     position: absolute;
     background-color: $data-primary;

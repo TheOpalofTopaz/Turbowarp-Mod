@@ -33,6 +33,9 @@ class LibraryItem extends React.PureComponent {
         this.handleMouseLeave(id);
     }
     handleClick (e) {
+        if (e.target.href) {
+            return;
+        }
         if (!this.props.disabled) {
             this.props.onSelect(this.props.id);
         }
@@ -125,6 +128,7 @@ class LibraryItem extends React.PureComponent {
                 internetConnectionRequired={this.props.internetConnectionRequired}
                 isPlaying={this.props.isPlaying}
                 name={this.props.name}
+                credits={this.props.credits}
                 showPlayButton={this.props.showPlayButton}
                 onBlur={this.handleBlur}
                 onClick={this.handleClick}
@@ -167,6 +171,10 @@ LibraryItem.propTypes = {
         PropTypes.string,
         PropTypes.node
     ]),
+    credits: PropTypes.arrayOf(PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.node
+    ])),
     onMouseEnter: PropTypes.func.isRequired,
     onMouseLeave: PropTypes.func.isRequired,
     onSelect: PropTypes.func.isRequired,
