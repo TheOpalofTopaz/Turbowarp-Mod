@@ -21,6 +21,45 @@ const fromHardcoded = ({userID = '0', username}) => {
 
 // The lists below are in no particular order.
 
+const contributors = [
+    {
+        userID: '41219524',
+        username: 'CubesterYT'
+    },
+    {
+        userID: '64691048',
+        username: 'CST1229'
+    },
+    {
+        username: 'FurryR'
+    },
+    {
+        userID: '17340565',
+        username: 'GarboMuffin'
+    },
+    {
+        userID: '12498592',
+        username: 'LilyMakesThings'
+    },
+    {
+        userID: '105362329',
+        username: 'TrueFantom'
+    },
+    {
+        userID: '9636514',
+        username: 'Tacodiva7729'
+    },
+    {
+        username: 'SimonShiki'
+    },
+    {
+        username: 'Geotale'
+    },
+    {
+        username: 'Wowfunhappy'
+    }
+].map(fromHardcoded);
+
 const addonDevelopers = [
     {
         userID: '34018398',
@@ -250,7 +289,50 @@ const extensionDevelopers = [
     }
 ].map(fromHardcoded);
 
+const extensionDevelopers = [
+    {
+        userID: '12498592',
+        username: 'LilyMakesThings'
+    },
+    {
+        username: 'DNin01'
+    },
+    {
+        username: 'Samq64'
+    },
+    {
+        username: '61080GBA'
+    },
+    {
+        username: 'adazem009'
+    },
+    {
+        username: 'sajtosteszta32'
+    },
+    {
+        username: 'yoyomonem'
+    },
+    {
+        userID: '55742784',
+        username: 'RedGuy7'
+    },
+    {
+        username: '28klotlucas2'
+    },
+    {
+        username: 'PPPDUD'
+    },
+    {
+        username: 'BackThePortal'
+    },
+    {
+        username: 'Naleksuh'
+    }
+].map(fromHardcoded);
+
 export default {
+    contributors: shuffle(contributors),
     addonDevelopers: shuffle(addonDevelopers),
-    extensionDevelopers: shuffle(extensionDevelopers)
+    extensionDevelopers: shuffle(extensionDevelopers),
+    docsWriters: shuffle(docsWriters),
 };
