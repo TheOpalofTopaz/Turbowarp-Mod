@@ -289,7 +289,7 @@ const extensionDevelopers = [
     }
 ].map(fromHardcoded);
 
-const docsWriters = [
+const docs = [
     {
         userID: '12498592',
         username: 'LilyMakesThings'
@@ -334,5 +334,5 @@ export default {
     contributors: shuffle(contributors),
     addonDevelopers: shuffle(addonDevelopers),
     extensionDevelopers: shuffle(extensionDevelopers),
-    docsWriters: shuffle(docsWriters),
+    docs: shuffle(docs)
 };

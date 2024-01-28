@@ -86,7 +86,7 @@ const Credits = () => (
         </section>
         <section>
             <h2>Contributors</h2>
-            <UserList users={UserData.contributers} />
+            <UserList users={UserData.contributors} />
         </section>
         <section>
             <h2>Addons</h2>
@@ -98,7 +98,7 @@ const Credits = () => (
         </section>
         <section>
             <h2>Documentation</h2>
-            <UserList users={UserData.docsWriters} />
+            <UserList users={UserData.docs} />
         </section>
         <section>
             <h2>Translators</h2>
