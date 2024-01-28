@@ -289,7 +289,7 @@ const extensionDevelopers = [
     }
 ].map(fromHardcoded);
 
-const extensionDevelopers = [
+const docsWriters = [
     {
         userID: '12498592',
         username: 'LilyMakesThings'
