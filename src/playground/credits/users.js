@@ -53,6 +53,7 @@ const contributors = [
         username: 'SimonShiki'
     },
     {
+        userID: '34824813',
         username: 'Geotale'
     },
     {
