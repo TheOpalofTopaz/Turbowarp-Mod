@@ -185,7 +185,7 @@ describe.skip('CloudManagerHOC', () => {
         vm.emit('HAS_CLOUD_DATA_UPDATE', true);
 
         mounted.setProps({
-            isShowingWithId: true,
+            isShowingProject: true,
             loadingState: LoadingState.SHOWING_WITH_ID
         });
         expect(vm.setCloudProvider.mock.calls.length).toBe(1);
@@ -194,7 +194,7 @@ describe.skip('CloudManagerHOC', () => {
         expect(onShowCloudInfo).not.toHaveBeenCalled();
     });
 
-    test('projectId change should not trigger cloudProvider connection unless isShowingWithId becomes true', () => {
+    test('projectId change should not trigger cloudProvider connection unless isShowingProject becomes true', () => {
         const Component = () => <div />;
         const WrappedComponent = cloudManagerHOC(Component);
         const mounted = mountWithIntl(
@@ -212,7 +212,7 @@ describe.skip('CloudManagerHOC', () => {
         expect(vm.setCloudProvider.mock.calls.length).toBe(0);
         expect(CloudProvider).not.toHaveBeenCalled();
         mounted.setProps({
-            isShowingWithId: true,
+            isShowingProject: true,
             loadingState: LoadingState.SHOWING_WITH_ID
         });
         expect(vm.setCloudProvider.mock.calls.length).toBe(1);
@@ -265,7 +265,8 @@ describe.skip('CloudManagerHOC', () => {
             projectId: 'a different id'
         });
 
-        expect(vm.setCloudProvider.mock.calls.length).toBe(2);
+        // should be 3 not 2 -- one to connect initially, one to disconnect, one to reconnect
+        expect(vm.setCloudProvider.mock.calls.length).toBe(3);
         expect(vm.setCloudProvider).toHaveBeenCalledWith(null);
         expect(requestCloseConnection).toHaveBeenCalledTimes(1);
 

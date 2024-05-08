@@ -122,7 +122,6 @@ const vmManagerHOC = function (WrappedComponent) {
         onLoadedProject: PropTypes.func,
         onSetProjectUnchanged: PropTypes.func,
         projectData: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
-        projectId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
         username: PropTypes.string,
         vm: PropTypes.instanceOf(VM).isRequired
     };
@@ -135,7 +134,6 @@ const vmManagerHOC = function (WrappedComponent) {
             locale: state.locales.locale,
             messages: state.locales.messages,
             projectData: state.scratchGui.projectState.projectData,
-            projectId: state.scratchGui.projectState.projectId,
             loadingState: loadingState,
             isPlayerOnly: state.scratchGui.mode.isPlayerOnly,
             isStarted: state.scratchGui.vmStatus.started

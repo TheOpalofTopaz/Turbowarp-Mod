@@ -7,6 +7,7 @@ import VM from 'scratch-vm';
 import CloudProvider from '../lib/cloud-provider';
 
 import {
+    getIsShowingProject,
     getIsShowingWithId
 } from '../reducers/project-state';
 
@@ -54,7 +55,7 @@ const cloudManagerHOC = function (WrappedComponent) {
             // when loading a new project e.g. via file upload
             // (and eventually move it out of the vm.clear function)
 
-            if (this.shouldReconnect(this.props, prevProps)) {
+            if (this.shouldConsiderReconnecting(this.props, prevProps)) {
                 this.disconnectFromCloud();
                 if (this.shouldConnect(this.props)) {
                     this.connectToCloud();
@@ -67,6 +68,7 @@ const cloudManagerHOC = function (WrappedComponent) {
             }
 
             if (this.shouldDisconnect(this.props, prevProps)) {
+                this.shouldDisconnect(this.props, prevProps);
                 this.disconnectFromCloud();
             }
         }
@@ -86,7 +88,7 @@ const cloudManagerHOC = function (WrappedComponent) {
         }
         shouldConnect (props) {
             return !this.isConnected() && this.canUseCloud(props) &&
-                props.isShowingWithId && props.vm.runtime.hasCloudData() &&
+                props.isShowingProject && props.vm.runtime.hasCloudData() &&
                 props.canModifyCloudData;
         }
         shouldDisconnect (props, prevProps) {
@@ -94,16 +96,15 @@ const cloudManagerHOC = function (WrappedComponent) {
                 ( // Can no longer use cloud or cloud provider info is now stale
                     !this.canUseCloud(props) ||
                     !props.vm.runtime.hasCloudData() ||
-                    (props.projectId !== prevProps.projectId) ||
-                    // tw: username changes are handled in "reconnect"
-                    // (props.username !== prevProps.username) ||
+                    props.projectId !== prevProps.projectId ||
                     // Editing someone else's project
                     !props.canModifyCloudData
                 );
         }
-        shouldReconnect (props, prevProps) {
+        shouldConsiderReconnecting (props, prevProps) {
             return this.isConnected() && (
                 props.username !== prevProps.username ||
+                props.projectId !== prevProps.projectId ||
                 props.reduxCloudHost !== prevProps.reduxCloudHost
             );
         }
@@ -151,7 +152,7 @@ const cloudManagerHOC = function (WrappedComponent) {
                 projectId,
                 username,
                 hasCloudPermission,
-                isShowingWithId,
+                isShowingProject,
                 onShowCloudInfo,
                 onInvalidUsername,
                 /* eslint-enable no-unused-vars */
@@ -174,7 +175,7 @@ const cloudManagerHOC = function (WrappedComponent) {
         reduxCloudHost: PropTypes.string,
         onSetReduxCloudHost: PropTypes.func,
         hasCloudPermission: PropTypes.bool,
-        isShowingWithId: PropTypes.bool.isRequired,
+        isShowingProject: PropTypes.bool.isRequired,
         onInvalidUsername: PropTypes.func,
         onShowCloudInfo: PropTypes.func,
         projectId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
@@ -190,14 +191,20 @@ const cloudManagerHOC = function (WrappedComponent) {
 
     const mapStateToProps = (state, ownProps) => {
         const loadingState = state.scratchGui.projectState.loadingState;
+        const baseProjectId = getIsShowingWithId(loadingState) || !getIsShowingProject(loadingState) ? (
+            state.scratchGui.projectState.projectId
+        ) : (
+            `@gui/${state.scratchGui.projectTitle}`
+        );
         return {
-            reduxCloudHost: state.scratchGui.tw.cloudHost,
-            isShowingWithId: getIsShowingWithId(loadingState),
-            projectId: state.scratchGui.projectState.projectId,
-            // if you're editing someone else's project, you can't modify cloud data
-            canModifyCloudData: (!state.scratchGui.mode.hasEverEnteredEditor || ownProps.canSave) &&
-                // possible security concern if the program attempts to encode webcam data over cloud variables
-                !(DISABLE_WITH_VIDEO_SENSING && ownProps.vm.extensionManager.isExtensionLoaded('videoSensing'))
+            isShowingProject: getIsShowingProject(loadingState),
+            projectId: state.scratchGui.mode.hasEverEnteredEditor ? `@editor/${baseProjectId}` : baseProjectId,
+            hasCloudPermission: state.scratchGui.tw ? state.scratchGui.tw.cloud : false,
+            username: state.scratchGui.tw ? state.scratchGui.tw.username : '',
+            canModifyCloudData: !(
+                DISABLE_WITH_VIDEO_SENSING && ownProps.vm.extensionManager.isExtensionLoaded('videoSensing')
+            ),
+            reduxCloudHost: state.scratchGui.tw.cloudHost
         };
     };
 
