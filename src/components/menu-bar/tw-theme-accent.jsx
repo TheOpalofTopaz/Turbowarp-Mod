@@ -7,13 +7,20 @@ import {connect} from 'react-redux';
 import check from './check.svg';
 import dropdownCaret from './dropdown-caret.svg';
 import {MenuItem, Submenu} from '../menu/menu.jsx';
-import {ACCENT_BLUE, ACCENT_MAP, ACCENT_PURPLE, ACCENT_RED, Theme} from '../../lib/themes/index.js';
+import {ACCENT_BLUE, ACCENT_MAP, ACCENT_PURPLE, ACCENT_RAINBOW, ACCENT_RED, Theme} from '../../lib/themes/index.js';
 import {openAccentMenu, accentMenuOpen, closeSettingsMenu} from '../../reducers/menus.js';
 import {setTheme} from '../../reducers/theme.js';
 import {persistTheme} from '../../lib/themes/themePersistance.js';
 import styles from './settings-menu.css';
 
+import prideIcon from './tw-accent-pride.svg';
+
 const options = defineMessages({
+    [ACCENT_RED]: {
+        defaultMessage: 'Pride',
+        description: 'Name of the pride color scheme.',
+        id: 'tw.accent.pride'
+    },
     [ACCENT_RED]: {
         defaultMessage: 'Red',
         description: 'Name of the red color scheme, used by TurboWarp by default.',
@@ -31,14 +38,29 @@ const options = defineMessages({
     }
 });
 
-const ColorIcon = props => (
-    <div
-        className={styles.accentIconOuter}
-        style={{
-            backgroundColor: ACCENT_MAP[props.id].guiColors['looks-secondary']
-        }}
-    />
-);
+const icons = {
+    [ACCENT_RAINBOW]: prideIcon,
+};
+
+const ColorIcon = props => {
+    if (icons[props.id]) {
+        return (
+            <img
+                src={icons[props.id]}
+                draggable={false}
+                width={24}
+            />
+        )
+    }
+    return (
+        <div
+            className={styles.accentIconOuter}
+            style={{
+                backgroundColor: ACCENT_MAP[props.id].guiColors['looks-secondary']
+            }}
+        />
+    )
+};
 
 ColorIcon.propTypes = {
     id: PropTypes.string
