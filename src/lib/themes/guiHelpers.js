@@ -67,6 +67,9 @@ const applyGuiColors = theme => {
     }
     metaThemeColor.setAttribute('content', evaluateCSS(guiColors['menu-bar-background']));
 
+    // the "alternate" colour allows for persistent gradient colours even in dark mode
+    metaThemeColor.setAttribute('content', evaluateCSS(guiColors['menu-bar-alternate']));
+
     // a horrible hack for icons...
     window.Recolor = {
         primary: guiColors['looks-secondary']
